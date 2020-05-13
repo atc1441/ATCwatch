@@ -1,6 +1,6 @@
 # ATCwatch
 Custom Aruino C++ firmware for the P8 and PineTime plus many more DaFit Smartwatches
-## you can support my work via paypal: https://paypal.me/hoverboard1?locale.x=de_DE this keeps projects like this comming.
+## you can support my work via paypal: https://paypal.me/hoverboard1 this keeps projects like this comming.
 
 Use this portable Arduino version: https://atcnetz.de/downloads/D6Arduino.rar
 here is a manual on how to use it: https://youtu.be/3gjmEdEDJ5A
