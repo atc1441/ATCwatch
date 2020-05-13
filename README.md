@@ -1,5 +1,9 @@
 # ATCwatch
 Custom Aruino C++ firmware for the P8 and PineTime plus many more DaFit Smartwatches
+
+About 150-200uA standby current consumtion, about 5 days of runtime rigth now.
+Basic menu system and notification working.
+
 #### You can support my work via paypal: https://paypal.me/hoverboard1 this keeps projects like this comming.
 
 Use this portable Arduino version: https://atcnetz.de/downloads/D6Arduino.rar
