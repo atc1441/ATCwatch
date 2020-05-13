@@ -4,6 +4,8 @@ Custom Aruino C++ firmware for the P8 and PineTime plus many more DaFit Smartwat
 About 150-200uA standby current consumtion.
 Basic menu system and notification working.
 
+If you want to use it on PineTime or other watches comment the #define P8WATCH to enable the PineTime Pinout
+
 #### You can support my work via paypal: https://paypal.me/hoverboard1 this keeps projects like this comming.
 
 Use this portable Arduino version: https://atcnetz.de/downloads/D6Arduino.rar
