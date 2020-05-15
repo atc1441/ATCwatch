@@ -23,3 +23,9 @@ https://www.youtube.com/watch?v=gUVEz-pxhgg
 
 This firmware is meant to be used with the D6Notification App from the PlayStore(Android):
 https://play.google.com/store/apps/details?id=com.atcnetz.de.notification&hl=gsw
+
+## License:
+You can use and edit the code as long as you mention me (Aaron Christophel and https://ATCnetz.de) in the source and somewhere in the menu of the working firmware, even when using small peaces of the code. :)
+If you want to use the code or parts of it commercial please write an email to: info@atcnetz.de
+
+This code uses the BMA421 Library wich is made by Bosch and this is under copyright by Bosch Sensortech GmbH
