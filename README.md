@@ -1,7 +1,7 @@
 # ATCwatch
 Custom Aruino C++ firmware for the P8 and PineTime plus many more DaFit Smartwatches
 
-About 150-200uA standby current consumtion.
+About 150-200uA standby current consumtion.Currently 92 Hours Runtime!.
 Basic menu system and notification working.
 
 If you want to use it on PineTime or other watches comment the #define P8WATCH to enable the PineTime Pinout
