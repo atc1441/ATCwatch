@@ -22,10 +22,10 @@ void init_touch() {
     delay(5);
     digitalWrite(TP_RESET, HIGH );
     delay(50);
-    Wire.beginTransmission(0x15);
-    Wire.write(0xA5);
-    Wire.write(0x03);
-    Wire.endTransmission();
+  //  Wire.beginTransmission(0x15);
+  //  Wire.write(0xA5);
+  //  Wire.write(0x03);
+  //  Wire.endTransmission();
     set_i2cReading(false);
   }
 }
@@ -38,10 +38,10 @@ void sleep_touch() {
     delay(5);
     digitalWrite(TP_RESET, HIGH );
     delay(50);
-    Wire.beginTransmission(0x15);
-    Wire.write(0xA5);
-    Wire.write(0x03);
-    Wire.endTransmission();
+ //   Wire.beginTransmission(0x15);
+ //   Wire.write(0xA5);
+ //   Wire.write(0x03);
+ //   Wire.endTransmission();
     set_i2cReading(false);
   }
 }
