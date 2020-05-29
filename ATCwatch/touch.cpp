@@ -24,6 +24,29 @@ void init_touch() {
     delay(5);
     digitalWrite(TP_RESET, HIGH );
     delay(50);
+    Wire.beginTransmission(0x15);
+    Wire.write(0x15);
+    Wire.endTransmission();
+    Wire.requestFrom(0x15, 1);
+    byte t1 = Wire.read();
+
+    Wire.beginTransmission(0x15);
+    Wire.write(0xA7);
+    Wire.endTransmission();
+    Wire.requestFrom(0x15, 1);
+    byte t2 = Wire.read();
+
+    Wire.beginTransmission(0x15);
+    Wire.write(0xA8);
+    Wire.endTransmission();
+    Wire.requestFrom(0x15, 1);
+    byte t3 = Wire.read();
+
+    Wire.beginTransmission(0x15);
+    Wire.write(0xA9);
+    Wire.endTransmission();
+    Wire.requestFrom(0x15, 1);
+    byte t4 = Wire.read();
   //  Wire.beginTransmission(0x15);
   //  Wire.write(0xA5);
   //  Wire.write(0x03);
