@@ -18,6 +18,8 @@ void init_touch() {
     Wire.begin();
     Wire.setClock(200000);
 
+    digitalWrite(TP_RESET, HIGH );
+    delay(50);
     digitalWrite(TP_RESET, LOW);
     delay(5);
     digitalWrite(TP_RESET, HIGH );
