@@ -21,7 +21,7 @@ void init_touch() {
     digitalWrite(TP_RESET, HIGH );
     delay(50);
     digitalWrite(TP_RESET, LOW);
-    delay(5);
+    delay(100);
     digitalWrite(TP_RESET, HIGH );
     delay(50);
     Wire.beginTransmission(0x15);
@@ -60,7 +60,7 @@ void sleep_touch() {
     set_i2cReading(true);
     touch_enable = false;
     digitalWrite(TP_RESET, LOW);
-    delay(5);
+    delay(100);
     digitalWrite(TP_RESET, HIGH );
     delay(50);
  //   Wire.beginTransmission(0x15);
