@@ -78,8 +78,8 @@ void get_read_touch() {
   Wire.beginTransmission(0x15);
   Wire.write(1);
   if (Wire.endTransmission())return;
-  Wire.requestFrom(0x15, 7);
-  for (int x = 0; x < 8; x++)
+  Wire.requestFrom(0x15, 6);
+  for (int x = 0; x < 6; x++)
   {
     data_raw[x] = Wire.read();
   }
