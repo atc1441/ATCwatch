@@ -6,6 +6,7 @@
 #include "accl.h"
 #include "touch.h"
 #include "inputoutput.h"
+#include "inputoutput.h"
 #include "battery.h"
 
 long last_button_press = 0;
@@ -150,6 +151,7 @@ void set_button_interrupt() {
 }
 
 void set_touch_interrupt() {
+  if (!get_i2cReading())get_read_touch();
   touch_int = true;
 }
 

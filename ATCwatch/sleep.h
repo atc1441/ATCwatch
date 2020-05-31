@@ -16,4 +16,5 @@ bool get_timed_int();
 long get_timed_int_time();
 void set_timed_int_time(long times);
 void set_i2cReading(bool state);
+bool get_i2cReading();
 void initRTC2();

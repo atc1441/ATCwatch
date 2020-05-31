@@ -88,6 +88,10 @@ void set_i2cReading(bool state) {
   i2cReading = state;
 }
 
+bool get_i2cReading() {
+  return i2cReading;
+}
+
 #define LF_FREQUENCY 32768UL
 #define SECONDS(x) ((uint32_t)((LF_FREQUENCY * x) + 0.5))
 #define wakeUpSeconds 0.040

@@ -40,7 +40,7 @@ bool get_sd_enabled() {
 
 void system_off()
 {
-  sleep_touch();
+  sleep_touch(true);
   reset_accl();
   disable_interrupt();
   disable_hardware();

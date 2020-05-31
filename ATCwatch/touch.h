@@ -18,6 +18,6 @@ struct touch_data_struct {
   int ypos;
 };
 void init_touch();
-void sleep_touch();
+void sleep_touch(bool state);
 void get_read_touch();
 touch_data_struct get_touch();

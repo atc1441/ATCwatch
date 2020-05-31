@@ -11,7 +11,6 @@ touch_data_struct touch_data;
 
 void init_touch() {
   if (!touch_enable) {
-    set_i2cReading(true);
     touch_enable = true;
     pinMode(TP_RESET, OUTPUT);
     pinMode(TP_INT, INPUT);
@@ -24,6 +23,8 @@ void init_touch() {
     delay(5);
     digitalWrite(TP_RESET, HIGH );
     delay(50);
+
+    set_i2cReading(true);
     Wire.beginTransmission(0x15);
     Wire.write(0x15);
     Wire.endTransmission();
@@ -51,14 +52,14 @@ void init_touch() {
   }
 }
 
-void sleep_touch() {
-  if (touch_enable) {
-    set_i2cReading(true);
+void sleep_touch(bool state) {
     touch_enable = false;
     digitalWrite(TP_RESET, LOW);
     delay(5);
     digitalWrite(TP_RESET, HIGH );
     delay(50);
+  if (state) {
+    set_i2cReading(true);
     Wire.beginTransmission(0x15);
     Wire.write(0xA5);
     Wire.write(0x03);
@@ -86,6 +87,6 @@ void get_read_touch() {
 }
 
 touch_data_struct get_touch() {
-  get_read_touch();
+  // get_read_touch();
   return touch_data;
 }
