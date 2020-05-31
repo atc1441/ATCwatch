@@ -13,7 +13,7 @@
 #include "push.h"
 #include "heartrate.h"
 
-#define versionString "1.1.1"
+#define versionString "1.3.1"
 
 class InfosScreen : public TheScreen
 {
