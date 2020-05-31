@@ -5,6 +5,7 @@
 #define P8WATCH//Enable or Disable this line to set for Pinetime or P8 Watch, more pinouts to added here
 
 #ifdef P8WATCH
+
 //display
 #define LCD_SCK      2
 #define LCD_SDI      3
@@ -30,6 +31,7 @@
 #define BMA421_SDA       6
 #define BMA421_SCL       7
 #define BMA421_INT       8
+//#define SWITCH_X_Y
 
 //HeartRate Sensor
 #define HRS3300_SDA       6
@@ -84,6 +86,7 @@
 #define BMA421_SDA       6
 #define BMA421_SCL       7
 #define BMA421_INT       8
+#define SWITCH_X_Y
 
 //HeartRate Sensor
 #define HRS3300_SDA       6

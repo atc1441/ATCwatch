@@ -114,6 +114,13 @@ bool acc_input() {
   if (!accl_is_enabled)return false;
   struct bma4_accel data;
   bma4_read_accel_xyz(&data, &dev);
+
+ #ifdef SWITCH_X_Y // pinetime has 90° rotated Accl
+ short tempX = data.x;
+ data.x = data.y;
+ data.y = tempX;
+ #endif
+ 
   if ((data.x + 335) <= 670 && data.z < 0) {
     if (!get_sleep()) {
       if (data.y <= 0) {
@@ -140,9 +147,17 @@ accl_data_struct get_accl_data() {
   struct bma4_accel data;
   if (!accl_is_enabled)return accl_data;
   rslt = bma4_read_accel_xyz(&data, &dev);
+  
+ #ifdef SWITCH_X_Y // pinetime has 90° rotated Accl
+ short tempX = data.x;
+ data.x = data.y;
+ data.y = tempX;
+ #endif
+ 
   accl_data.x = data.x;
   accl_data.y = data.y;
   accl_data.z = data.z;
+
 
   rslt = bma421_step_counter_output(&accl_data.steps, &dev);
   rslt = bma421_activity_output(&accl_data.activity, &dev);
