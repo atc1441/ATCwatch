@@ -39,12 +39,12 @@ void ble_feed() {
 }
 
 void ble_ConnectHandler(BLECentral& central) {
-  sleep_up();
+  sleep_up(WAKEUP_BLECONNECTED);
   set_vars_ble_connected(true);
 }
 
 void ble_DisconnectHandler(BLECentral& central) {
-  sleep_up();
+  sleep_up(WAKEUP_BLEDISCONNECTED);
   set_vars_ble_connected(false);
 }
 

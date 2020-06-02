@@ -160,7 +160,7 @@ void set_accl_interrupt() {
 }
 
 void interrupt_charged() {
-  sleep_up();
+  sleep_up(WAKEUP_CHARGED);
   set_sleep_time();
   if (get_charged())
     set_motor_ms();
@@ -169,7 +169,7 @@ void interrupt_charged() {
 }
 
 void interrupt_charge() {
-  sleep_up();
+  sleep_up(WAKEUP_CHARGE);
   set_sleep_time();
   if (get_charge())
     set_motor_ms();
@@ -180,7 +180,7 @@ void interrupt_charge() {
 void interrupt_button() {
   if (get_button() && (millis() - last_button_press > 200)) {
     last_button_press = millis();
-    if (!sleep_up()) {
+    if (!sleep_up(WAKEUP_BUTTON)) {
       display_home();
     }
     set_motor_ms(40);
@@ -189,7 +189,7 @@ void interrupt_button() {
 }
 
 void interrupt_touch() {
-  if (!sleep_up()) {
+  if (!sleep_up(WAKEUP_TOUCH)) {
     check_menu();
   } else {
     display_home();
@@ -198,7 +198,7 @@ void interrupt_touch() {
 }
 
 void interrupt_accl() {
-  sleep_up();
+  sleep_up(WAKEUP_ACCL_INT);
   get_accl_int();
   set_sleep_time();
 }

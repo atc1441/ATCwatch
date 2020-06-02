@@ -19,7 +19,7 @@ void show_push(String pushMSG) {
   int timeShown = pushMSG.substring(secondCommaIndex + 1, lastCommaIndex).toInt();
   int SymbolNr = pushMSG.substring(lastCommaIndex + 1).toInt();
   msgText = MsgText;
-  sleep_up();
+  sleep_up(WAKEUP_BLEPUSH);
   display_notify();
   set_motor_ms();
   set_led_ms(100);

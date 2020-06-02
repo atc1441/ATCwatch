@@ -14,6 +14,7 @@
 
 bool sleep_enable = false;
 bool sleep_sleeping = false;
+int wakeup_reason = 0;
 long lastaction = 0;
 volatile bool i2cReading = false;
 
@@ -30,8 +31,9 @@ bool get_sleep() {
   return sleep_sleeping;
 }
 
-bool sleep_up() {
+bool sleep_up(int reason) {
   if (sleep_sleeping) {
+    wakeup_reason = reason;
     sleep_sleeping = false;
     set_sleep_time();
     display_enable(true);
@@ -46,6 +48,10 @@ void sleep_down() {
     sleep_sleeping = true;
     disable_hardware();
   }
+}
+
+int get_wakeup_reason() {
+  return wakeup_reason;
 }
 
 void disable_hardware() {
