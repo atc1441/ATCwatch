@@ -82,8 +82,8 @@ void check_sleep_times() {
   bool temp_sleep = false;
   if (millis() - lastaction > get_sleep_time_menu())
   temp_sleep = true;
-  if(get_wakeup_reason()== WAKEUP_ACCL && !get_is_looing_at())
-  temp_sleep = true;
+ // if(get_wakeup_reason()== WAKEUP_ACCL && !get_is_looing_at())
+ // temp_sleep = true;
   if(temp_sleep)
     sleep_down();
 }
