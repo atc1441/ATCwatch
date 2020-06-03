@@ -134,7 +134,7 @@ bool acc_input() {
       last_y_acc = 0;
       return false;
     }
-    if (data.y + 320 < last_y_acc) {
+    if (data.y + 230 < last_y_acc) {
       last_y_acc = data.y;
       return true;
     }

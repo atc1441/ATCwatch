@@ -18,6 +18,7 @@ bool sleep_sleeping = false;
 int wakeup_reason = 0;
 long lastaction = 0;
 volatile bool i2cReading = false;
+long last_sleep_check;
 
 void init_sleep() {
   //sd_power_dcdc_mode_set(NRF_POWER_DCDC_ENABLE);
@@ -79,13 +80,17 @@ void set_sleep_time() {
 }
 
 void check_sleep_times() {
-  bool temp_sleep = false;
-  if (millis() - lastaction > get_sleep_time_menu())
-  temp_sleep = true;
- // if(get_wakeup_reason()== WAKEUP_ACCL && !get_is_looing_at())
- // temp_sleep = true;
-  if(temp_sleep)
-    sleep_down();
+  if (millis() - last_sleep_check > 50) {
+    last_sleep_check = millis();
+
+    bool temp_sleep = false;
+    if (millis() - lastaction > get_sleep_time_menu())
+      temp_sleep = true;
+    if (get_wakeup_reason() == WAKEUP_ACCL && !get_is_looing_at())
+      temp_sleep = true;
+    if (temp_sleep)
+      sleep_down();
+  }
 }
 
 volatile bool shot;
