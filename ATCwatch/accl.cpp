@@ -142,6 +142,22 @@ bool acc_input() {
   return false;
 }
 
+bool get_is_looing_at(){
+  if (!accl_is_enabled)return false;
+  struct bma4_accel data;
+  bma4_read_accel_xyz(&data, &dev);
+
+ #ifdef SWITCH_X_Y // pinetime has 90° rotated Accl
+ short tempX = data.x;
+ data.x = data.y;
+ data.y = tempX;
+ #endif
+ 
+  if ((data.y + 300) <= 600 && (data.x + 300) <= 600 && data.z < 0)
+      return true;
+  return false;
+}
+
 accl_data_struct get_accl_data() {
   int16_t rslt;
   struct bma4_accel data;

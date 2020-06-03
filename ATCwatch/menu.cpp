@@ -22,6 +22,7 @@
 #include "menu_Error.h"
 #include "menu_animation.h"
 #include "menu_infos.h"
+#include "menu_Accl.h"
 
 long last_main_run;
 int vars_menu = -1;
@@ -41,6 +42,7 @@ SettingsScreen settingsScreen;
 ErrorScreen errorScreen;
 AnimationScreen animationScreen;
 InfosScreen infosScreen;
+AcclScreen acclScreen;
 
 
 App notifyApp("Notify", symbolMsg, &notifyScreen);
@@ -55,10 +57,11 @@ App settingsApp("Settings", symbolSettings, &settingsScreen);
 
 App animationApp("Animation", symbolAnimation, &animationScreen);
 App infosApp("Infos", symbolInfos, &infosScreen);
+App acclApp("Accl", symbolAccl , &acclScreen);
 
 AppScreen apps1Screen(1, &notifyApp, &heartApp, &debugApp, &animationApp);
 AppScreen apps2Screen(2, &rebootApp, &updateApp, &offApp, &settingsApp);
-AppScreen apps3Screen(3, &infosApp, &batteryApp, &batteryApp, &batteryApp);
+AppScreen apps3Screen(3, &infosApp, &acclApp, &batteryApp, &batteryApp);
 
 Screen *currentScreen = &homeScreen;
 Screen *oldScreen = &homeScreen;
