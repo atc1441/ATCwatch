@@ -68,8 +68,11 @@ byte get_last_heartrate() {
 }
 
 void get_heartrate_ms() {
-  if (heartrate_enable)
+  if (heartrate_enable) {
+    set_i2cReading(true);
     last_heartrate_ms = HRS3300.getHR();
+    set_i2cReading(false);
+  }
 }
 
 void check_timed_heartrate(int minutes) {
