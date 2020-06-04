@@ -13,13 +13,15 @@ struct accl_data_struct {
   uint16_t result;
   uint8_t activity;
   uint16_t interrupt;
+  bool enabled;
 };
 
 void init_accl();
+uint16_t do_accl_init();
 void reset_accl();
 void reset_step_counter();
 bool acc_input();
-bool get_is_looing_at();
+bool get_is_looked_at();
 accl_data_struct get_accl_data();
 void get_accl_int();
 uint16_t i2c_reg_write(uint8_t i2c_addr, uint8_t reg_addr, uint8_t *reg_data, uint16_t length);

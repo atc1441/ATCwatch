@@ -40,8 +40,27 @@ void init_accl() {
   conf.bandwidth = BMA4_ACCEL_NORMAL_AVG4;
   conf.perf_mode = BMA4_CONTINUOUS_MODE;
 
+  unsigned int init_counter = 0;
+  do
+  {
+    watchdog_feed();
+    rslt = rslt | do_accl_init();
+    if (rslt == 0) {
+      accl_is_enabled = true;
+      accl_data.result = rslt;
+  accl_data.enabled = true;
+      return;
+    }
+  } while (init_counter++ < 5);
 
-  rslt = rslt | bma421_init(&dev);
+  accl_is_enabled = false;
+  accl_data.result = rslt;
+  accl_data.enabled = false;
+}
+
+uint16_t do_accl_init() {
+  uint16_t init_rslt = 0;
+  init_rslt = init_rslt | bma421_init(&dev);
 
   delay(50);
 
@@ -49,41 +68,54 @@ void init_accl() {
 
   delay(50);
 
-  rslt = rslt | bma421_write_config_file(&dev);
+  init_rslt = init_rslt | bma421_write_config_file(&dev);
   delay(20);
 
-  rslt = rslt | bma4_set_accel_config(&conf, &dev);
-  rslt = rslt | bma4_set_accel_enable(BMA4_ENABLE, &dev);
+  init_rslt = init_rslt | bma4_set_accel_config(&conf, &dev);
+  init_rslt = init_rslt | bma4_set_accel_enable(BMA4_ENABLE, &dev);
   delay(40);
 
-  rslt = rslt | bma421_feature_enable1(BMA421_STEP_CNTR | BMA421_ANY_MOTION | BMA421_ACTIVITY | BMA421_WAKEUP | BMA421_TILT, BMA4_ENABLE, &dev);
+  init_rslt = init_rslt | bma421_feature_enable1(BMA421_STEP_CNTR | BMA421_ANY_MOTION | BMA421_ACTIVITY | BMA421_WAKEUP | BMA421_TILT, BMA4_ENABLE, &dev);
 
   unsigned int v4;
+
+  unsigned int startup_counter = 0;
+
   uint8_t data[64];
   do
   {
     delay(10);
-    rslt = bma4_read_regs(0x5Eu, data, 0x40u, &dev);
+    init_rslt = init_rslt | bma4_read_regs(0x5Eu, data, 0x40u, &dev);
     v4 = ((unsigned int)data[59] >> 4) & 1;
     delay(1);
-  }
-  while ( !v4 );
-  watchdog_feed();
+    startup_counter++;
+    if (startup_counter >= 5) {
+      init_rslt = init_rslt | 0xFFF1;
+      break;
+    }
+  } while ( !v4 );
+
+  startup_counter = 0;
   do
   {
-    rslt = bma421_step_detector_enable(BMA4_ENABLE, &dev);
+    init_rslt = init_rslt | bma421_step_detector_enable(BMA4_ENABLE, &dev);
     delay(10);
     bma4_read_regs(0x5Eu, data, 0x40u, &dev);
     v4 = ((unsigned int)data[59] >> 4) & 1;
     delay(1);
-  }
-  while ( !v4 );
+    startup_counter++;
+    if (startup_counter >= 5) {
+      init_rslt = init_rslt | 0xFFF2;
+      break;
+    }
+  } while ( !v4 );
 
-  rslt = rslt | bma_421_step_counter_init(&dev);
-  rslt = rslt | write0x7Fto0x40(&dev);
+  init_rslt = init_rslt | bma_421_step_counter_init(&dev);
+  init_rslt = init_rslt | write0x7Fto0x40(&dev);
   delay(10);
 
   uint8_t v12 = 4;
+  startup_counter = 0;
   do
   {
     v12 = 4;
@@ -91,14 +123,18 @@ void init_accl() {
     delay(1);
     v12 = 0;
     bma4_read_regs(0x7D, &v12, 1, &dev);
-  }
-  while ( v12 != 4 );
+    startup_counter++;
+    if (startup_counter >= 5) {
+      init_rslt = init_rslt | 0xFFF3;
+      break;
+    }
+  } while ( v12 != 4 );
+
   v12 = 6;
   bma4_write_regs(0x70, &v12, 1, &dev);
-  // rslt = rslt | bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT | BMA421_ACTIVITY_INT | BMA421_TILT_INT | BMA421_WAKEUP_INT | BMA421_ANY_NO_MOTION_INT | BMA421_ERROR_INT, BMA4_ENABLE, &dev);
-  //rslt = rslt | bma421_reset_step_counter(&dev);
-  accl_is_enabled = true;
-  accl_data.result = rslt;
+  // init_rslt = init_rslt | bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT | BMA421_ACTIVITY_INT | BMA421_TILT_INT | BMA421_WAKEUP_INT | BMA421_ANY_NO_MOTION_INT | BMA421_ERROR_INT, BMA4_ENABLE, &dev);
+  //init_rslt = init_rslt | bma421_reset_step_counter(&dev);
+  return init_rslt;
 }
 
 void reset_accl() {
@@ -115,12 +151,12 @@ bool acc_input() {
   struct bma4_accel data;
   bma4_read_accel_xyz(&data, &dev);
 
- #ifdef SWITCH_X_Y // pinetime has 90° rotated Accl
- short tempX = data.x;
- data.x = data.y;
- data.y = tempX;
- #endif
- 
+#ifdef SWITCH_X_Y // pinetime has 90° rotated Accl
+  short tempX = data.x;
+  data.x = data.y;
+  data.y = tempX;
+#endif
+
   if ((data.x + 335) <= 670 && data.z < 0) {
     if (!get_sleep()) {
       if (data.y <= 0) {
@@ -142,19 +178,19 @@ bool acc_input() {
   return false;
 }
 
-bool get_is_looing_at(){
+bool get_is_looked_at() {
   if (!accl_is_enabled)return false;
   struct bma4_accel data;
   bma4_read_accel_xyz(&data, &dev);
 
- #ifdef SWITCH_X_Y // pinetime has 90° rotated Accl
- short tempX = data.x;
- data.x = data.y;
- data.y = tempX;
- #endif
- 
-  if ((data.y + 300) <= 600 && (data.x + 300) <= 600 && data.z < 0)
-      return true;
+#ifdef SWITCH_X_Y // pinetime has 90° rotated Accl
+  short tempX = data.x;
+  data.x = data.y;
+  data.y = tempX;
+#endif
+
+  if ((data.y + 300) <= 600 && (data.x + 300) <= 600 && data.z < 100)
+    return true;
   return false;
 }
 
@@ -163,13 +199,13 @@ accl_data_struct get_accl_data() {
   struct bma4_accel data;
   if (!accl_is_enabled)return accl_data;
   rslt = bma4_read_accel_xyz(&data, &dev);
-  
- #ifdef SWITCH_X_Y // pinetime has 90° rotated Accl
- short tempX = data.x;
- data.x = data.y;
- data.y = tempX;
- #endif
- 
+
+#ifdef SWITCH_X_Y // pinetime has 90° rotated Accl
+  short tempX = data.x;
+  data.x = data.y;
+  data.y = tempX;
+#endif
+
   accl_data.x = data.x;
   accl_data.y = data.y;
   accl_data.z = data.z;

@@ -28,7 +28,9 @@ class AcclScreen : public TheScreen
       displayPrintln(0, 32, "Y:", 0xFFFF, 0x0000, 2);
       displayPrintln(0, 48, "Z:", 0xFFFF, 0x0000, 2);
       displayPrintln(0, 64, "Temp:", 0xFFFF, 0x0000, 2);
-      displayPrintln(0, 64 + 32, "Steps:", 0xFFFF, 0x0000, 2);
+      displayPrintln(0, 64 + 16, "Steps:", 0xFFFF, 0x0000, 2);
+      displayPrintln(0, 16 + 16 + 16 + 16 + 16 + 16, "Rslt:", 0xFFFF, 0x0000, 2);
+      displayPrintln(0, 16 + 16 + 16 + 16 + 16 + 16 + 16, "Enabled:", 0xFFFF, 0x0000, 2);
     }
 
     virtual void main()
@@ -38,8 +40,10 @@ class AcclScreen : public TheScreen
       displayPrintln((2 * 5 * 3), 16, (String)accl_data.x + "    ", 0xFFFF, 0x0000, 2);
       displayPrintln((2 * 5 * 3), 16 + 16, (String)accl_data.y + "    ", 0xFFFF, 0x0000, 2);
       displayPrintln((2 * 5 * 3), 16 + 16 + 16, (String)accl_data.z + "    ", 0xFFFF, 0x0000, 2);
-      displayPrintln((2 * 5 * 3), 16 + 16 + 16 + 16 + 16, (String)accl_data.temp + "    ", 0xFFFF, 0x0000, 2);
-      displayPrintln((2 * 5 * 3), 16 + 16 + 16 + 16 + 16 + 32, (String)accl_data.steps + "    ", 0xFFFF, 0x0000, 2);
+      displayPrintln((2 * 5 * 6), 16 + 16 + 16 + 16, (String)accl_data.temp + "    ", 0xFFFF, 0x0000, 2);
+      displayPrintln((2 * 5 * 7), 16 + 16 + 16 + 16 + 16, (String)accl_data.steps + "    ", 0xFFFF, 0x0000, 2);
+      displayPrintln((2 * 5 * 6), 16 + 16 + 16 + 16 + 16 + 16, (String)accl_data.result, 0xFFFF, 0x0000, 2);
+      displayPrintln((2 * 5 * 9), 16 + 16 + 16 + 16 + 16 + 16 + 16, (String)accl_data.enabled, 0xFFFF, 0x0000, 2);
     }
 
     virtual void up()
