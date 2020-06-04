@@ -163,18 +163,18 @@ void interrupt_charged() {
   sleep_up(WAKEUP_CHARGED);
   set_sleep_time();
   if (get_charged())
-    set_motor_ms();
-  else
     set_led_ms(1000);
+  else
+    set_motor_ms();
 }
 
 void interrupt_charge() {
   sleep_up(WAKEUP_CHARGE);
   set_sleep_time();
   if (get_charge())
-    set_motor_ms();
-  else
     set_led_ms(1000);
+  else
+    set_motor_ms();
 }
 
 void interrupt_button() {
