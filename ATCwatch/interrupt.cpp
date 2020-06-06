@@ -189,6 +189,7 @@ void interrupt_button() {
 }
 
 void interrupt_touch() {
+  set_was_touched(true);
   if (!sleep_up(WAKEUP_TOUCH)) {
     check_menu();
   } else {

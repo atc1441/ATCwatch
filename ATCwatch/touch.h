@@ -19,5 +19,7 @@ struct touch_data_struct {
 };
 void init_touch();
 void sleep_touch(bool state);
+bool get_was_touched();
+void set_was_touched(bool state);
 void get_read_touch();
 touch_data_struct get_touch();

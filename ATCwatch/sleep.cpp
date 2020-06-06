@@ -49,6 +49,7 @@ void sleep_down() {
   if (!sleep_sleeping) {
     sleep_sleeping = true;
     disable_hardware();
+    set_was_touched(false);
   }
 }
 
@@ -80,13 +81,13 @@ void set_sleep_time() {
 }
 
 void check_sleep_times() {
-  if (millis() - last_sleep_check > 50) {
+  if (millis() - last_sleep_check > 300) {
     last_sleep_check = millis();
 
     bool temp_sleep = false;
     if (millis() - lastaction > get_sleep_time_menu())
       temp_sleep = true;
-    if (get_wakeup_reason() == WAKEUP_ACCL && !get_is_looked_at())
+    if (get_wakeup_reason() == WAKEUP_ACCL && !get_was_touched() && !get_is_looked_at())
       temp_sleep = true;
     if (temp_sleep)
       sleep_down();

@@ -6,6 +6,7 @@
 #include <Wire.h>
 
 int touch_enable = false;
+bool was_touched = false;
 
 touch_data_struct touch_data;
 
@@ -53,11 +54,11 @@ void init_touch() {
 }
 
 void sleep_touch(bool state) {
-    touch_enable = false;
-    digitalWrite(TP_RESET, LOW);
-    delay(5);
-    digitalWrite(TP_RESET, HIGH );
-    delay(50);
+  touch_enable = false;
+  digitalWrite(TP_RESET, LOW);
+  delay(5);
+  digitalWrite(TP_RESET, HIGH );
+  delay(50);
   if (state) {
     set_i2cReading(true);
     Wire.beginTransmission(0x15);
@@ -66,6 +67,14 @@ void sleep_touch(bool state) {
     Wire.endTransmission();
     set_i2cReading(false);
   }
+}
+
+bool get_was_touched() {
+  return was_touched;
+}
+
+void set_was_touched(bool state) {
+  was_touched = state;
 }
 
 void get_read_touch() {
