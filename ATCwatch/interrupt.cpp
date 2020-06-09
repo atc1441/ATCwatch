@@ -67,7 +67,7 @@ void GPIOTE_IRQHandler()
       last_accl_state = accl_pin;
       NRF_GPIO->PIN_CNF[BMA421_INT] &= ~GPIO_PIN_CNF_SENSE_Msk;
       NRF_GPIO->PIN_CNF[BMA421_INT] |= ((last_accl_state ? GPIO_PIN_CNF_SENSE_Low : GPIO_PIN_CNF_SENSE_High) << GPIO_PIN_CNF_SENSE_Pos);
-      if (last_accl_state == false)set_accl_interrupt();
+      if (last_accl_state == false) set_accl_interrupt();
     }
   }
   (void)NRF_GPIOTE->EVENTS_PORT;
