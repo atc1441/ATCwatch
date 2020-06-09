@@ -20,7 +20,7 @@ struct bma4_accel_config accel_conf;
 void init_accl() {
   pinMode(BMA421_INT, INPUT);
   Wire.begin();
-  Wire.setClock(200000);
+  Wire.setClock(250000);
 
   uint16_t rslt = 0;
   uint8_t init_seq_status = 0;
@@ -70,14 +70,20 @@ uint16_t do_accl_init() {
   delay(20);
   init_rslt = init_rslt | bma4_set_accel_config(&accel_conf, &bma);
   delay(20);
-  init_rslt = init_rslt | bma423_feature_enable(BMA423_STEP_CNTR, 1, &bma);
+  init_rslt = init_rslt | bma423_feature_enable(BMA423_STEP_CNTR | BMA423_STEP_ACT, 1, &bma);//Step Counter and Acticity Feature (Standing, Walking, Running)
   delay(20);
-  init_rslt = init_rslt | bma423_feature_enable(BMA423_STEP_ACT, 1, &bma);
+  //init_rslt = init_rslt | bma423_map_interrupt(BMA4_INTR1_MAP,  BMA423_ACTIVITY_INT | BMA423_STEP_CNTR_INT, 1,&bma);
   delay(20);
-  init_rslt = init_rslt | bma423_map_interrupt(BMA4_INTR1_MAP,  BMA423_ACTIVITY_INT | BMA423_STEP_CNTR_INT, 1, &bma);
+  //init_rslt = init_rslt | bma423_step_counter_set_watermark(1, &bma);// 1*20 Steps
   delay(20);
-  init_rslt = init_rslt | bma423_step_counter_set_watermark(1, &bma);
-  delay(20);
+
+  struct bma4_int_pin_config int_pin_config;
+  int_pin_config.edge_ctrl = BMA4_LEVEL_TRIGGER;
+  int_pin_config.lvl = BMA4_ACTIVE_LOW;
+  int_pin_config.od = BMA4_PUSH_PULL;
+  int_pin_config.output_en = BMA4_OUTPUT_ENABLE;
+  int_pin_config.input_en = BMA4_INPUT_DISABLE;
+  bma4_set_int_pin_config(&int_pin_config, BMA4_INTR1_MAP, &bma);
 
   return init_rslt;
 }
