@@ -8,6 +8,7 @@
 void init_menu();
 void display_home();
 void display_notify();
+void display_charging();
 void display_booting();
 void display_screen(bool ignoreWait = false);
 void check_menu(touch_data_struct touch_data);

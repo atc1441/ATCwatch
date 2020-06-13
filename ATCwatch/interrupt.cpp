@@ -164,8 +164,10 @@ void interrupt_charged() {
   set_sleep_time();
   if (get_charged())
     set_led_ms(1000);
-  else
+  else {
     set_motor_ms();
+    display_charging();
+  }
 }
 
 void interrupt_charge() {
@@ -173,8 +175,10 @@ void interrupt_charge() {
   set_sleep_time();
   if (get_charge())
     set_led_ms(1000);
-  else
+  else {
     set_motor_ms();
+    display_charging();
+  }
 }
 
 void interrupt_button() {
@@ -192,8 +196,6 @@ void interrupt_touch() {
   set_was_touched(true);
   if (!sleep_up(WAKEUP_TOUCH)) {
     set_new_touch_interrupt();
-  } else {
-    display_home();
   }
   set_sleep_time();
 }

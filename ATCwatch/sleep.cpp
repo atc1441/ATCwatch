@@ -2,6 +2,7 @@
 #include "sleep.h"
 #include "Arduino.h"
 #include "pinout.h"
+#include "battery.h"
 #include "display.h"
 #include "backlight.h"
 #include "heartrate.h"
@@ -41,6 +42,10 @@ bool sleep_up(int reason) {
     set_sleep_time();
     display_enable(true);
     set_backlight();
+    if (get_charge()) {
+      display_home();
+    } else
+      display_charging();
     return true;
   }
   return false;

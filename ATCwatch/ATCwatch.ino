@@ -71,7 +71,9 @@ void loop() {
   }
   if (get_timed_int()) {//Theorecticly every 40ms via RTC2 but since the display takes longer its not accurate at all when display on
     if (get_sleep()) {
-      if (acc_input())sleep_up(WAKEUP_ACCL);//check if the hand was lifted and turn on the display if so
+      if (acc_input()){
+         sleep_up(WAKEUP_ACCL);//check if the hand was lifted and turn on the display if so
+      }
     }
     time_data_struct time_data = get_time();
     if (time_data.hr == 0) {// check for new day
