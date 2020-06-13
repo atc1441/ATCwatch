@@ -1,29 +1,30 @@
 
 #pragma once
 #include "Arduino.h"
-#include "classScreen.h"
+#include "class.h"
 #include "images.h"
 #include "menu.h"
 #include "display.h"
-#include "menuAppsBase.h"
 #include "ble.h"
 #include "time.h"
 #include "battery.h"
 #include "accl.h"
 #include "push.h"
 #include "heartrate.h"
-#include "buttonYesNo.h"
 
 
-class RebootScreen : public TheScreen
+class RebootScreen : public Screen
 {
   public:
-    RebootScreen() {
-    }
-
     virtual void pre()
     {
-      drawYesNoButton("Reboot ?");
+      static const char * btns[] = {"Yes", "No", ""};
+      lv_obj_t * mbox1 = lv_mbox_create(lv_scr_act(), NULL);
+      lv_mbox_set_text(mbox1, "Reboot ?");
+      lv_mbox_add_btns(mbox1, btns);
+      lv_obj_set_width(mbox1, 200);
+      lv_obj_set_event_cb(mbox1, event_handler);
+      lv_obj_align(mbox1, NULL, LV_ALIGN_CENTER, 0, 0);
     }
 
     virtual void main()
@@ -37,16 +38,23 @@ class RebootScreen : public TheScreen
 
     virtual void click(touch_data_struct touch_data)
     {
-      switch (checkYesNoButtonClick(touch_data.xpos, touch_data.ypos)) {
-        case 1:
-          set_reboot();
-          break;
-        case 2:
-          set_last_menu();
-          break;
-      }
+
     }
 
+    virtual void pre_display()// if this is set, the screen gets not cleared
+    {
+    }
+
+    
   private:
 
+    static void event_handler(lv_obj_t * obj, lv_event_t event)
+    {
+      if (event == LV_EVENT_VALUE_CHANGED) {
+        if ("Yes" == lv_mbox_get_active_btn_text(obj))
+          set_reboot();
+        else if ("No" == lv_mbox_get_active_btn_text(obj))
+          set_last_menu();
+      }
+    }
 };

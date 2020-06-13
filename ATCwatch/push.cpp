@@ -5,7 +5,7 @@
 #include "display.h"
 #include "inputoutput.h"
 
-String msgText;
+String msgText = " ";
 
 void init_push() {
 

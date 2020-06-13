@@ -47,8 +47,7 @@ void disable_workaround(NRF_SPIM_Type * spim, uint32_t ppi_channel, uint32_t gpi
   NRF_PPI->CHENSET = ppi_channel;
 }
 
-
-void write_fast_spi(uint8_t *ptr, uint32_t len) {
+void write_fast_spi(const uint8_t *ptr, uint32_t len) {
   if (len == 1) {
     enable_workaround(NRF_SPIM2, 8, 8);
   } else {

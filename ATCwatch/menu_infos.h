@@ -5,7 +5,6 @@
 #include "images.h"
 #include "menu.h"
 #include "display.h"
-#include "menuAppsBase.h"
 #include "ble.h"
 #include "time.h"
 #include "battery.h"
@@ -13,33 +12,41 @@
 #include "push.h"
 #include "heartrate.h"
 
-#define versionString "1.5.1"
+#define versionString "2.0.1"
 
-class InfosScreen : public TheScreen
+class InfosScreen : public Screen
 {
   public:
-    InfosScreen() {
-    }
-
     virtual void pre()
     {
-      char tmp[16];
-      sprintf(tmp, "%04X", NRF_FICR->DEVICEADDR[1] & 0xffff);
-      String MyID = tmp;
-      sprintf(tmp, "%08X", NRF_FICR->DEVICEADDR[0]);
-      MyID += tmp;
+      char version_char[10];
+      sprintf(version_char, versionString);
+      char mac_char[16];
+      sprintf(mac_char, "%04X%08X", (NRF_FICR->DEVICEADDR[1] & 0xffff), NRF_FICR->DEVICEADDR[0]);
 
-      displayRect(0, 0, 240, 240, 0x0000);
-      displayImage(120 - (72 / 2), 240 - 72, 72, 72, symbolInfos);
-      displayPrintln(0, 0, "Infos:", 0xFFFF, 0x0000, 2);
-      displayPrintln(0, 16 + 2, "Firmware By:", 0xFFFF, 0x0000, 2);
-      displayPrintln(0, 16 + 16 + 5, "   ATCnetz.de", 0xFFFF, 0x0000, 2);
-      displayPrintln(0, 16 + 16 + 16 + 6, "(Aaron Christophel)", 0xFFFF, 0x0000, 2);
-      displayPrintln(20, 16 + 16 + 16 + 16 + 10, "Version:" + (String)versionString, 0xFFFF, 0x0000, 2);
-      displayPrintln(20, 16 + 16 + 16 + 16 + 16 + 16, "Compiled:", 0xFFFF, 0x0000, 2);
-      displayPrintln(20, 16 + 16 + 16 + 16 + 16 + 16 + 16, (String)__DATE__ , 0xFFFF, 0x0000, 2);
-      displayPrintln(20, 16 + 16 + 16 + 16 + 16 + 16 + 16 + 16, (String)__TIME__ , 0xFFFF, 0x0000, 2);
-      displayPrintln(20, 16 + 16 + 16 + 16 + 16 + 16 + 16 + 16 + 16 + 4, "MAC:" + MyID , 0xFFFF, 0x0000, 2);
+      label = lv_label_create(lv_scr_act(), NULL);
+      
+      lv_label_set_text(label,
+                        "Infos:\n"
+                        "Firmware By:\n"
+                        "   ATCnetz.de\n"
+                        "    (Aaron Christophel)\n"
+                        "  Compiled:\n"
+                        "  "__DATE__"\n"
+                        "  "__TIME__
+                       );
+                       
+      lv_obj_align(label, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
+
+      label_version = lv_label_create(lv_scr_act(), NULL);
+      lv_label_set_text(label_version,"  Version:");
+      lv_label_set_text_fmt(label_version, "  Version: %s",version_char);
+      lv_obj_align(label_version, label, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 0);
+
+      label_mac = lv_label_create(lv_scr_act(), NULL);
+      lv_label_set_text(label_mac,"  MAC:");
+      lv_label_set_text_fmt(label_mac, "  MAC: %s",mac_char);
+      lv_obj_align(label_mac, label_version, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 0);
     }
 
     virtual void main()
@@ -47,6 +54,11 @@ class InfosScreen : public TheScreen
 
     }
 
-  private:
+    virtual void right()
+    {
+      set_last_menu();
+    }
 
+  private:
+    lv_obj_t *label, *label_version, *label_mac;
 };

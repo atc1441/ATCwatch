@@ -1,11 +1,10 @@
 
 #pragma once
 #include "Arduino.h"
-#include "classScreen.h"
+#include "class.h"
 #include "images.h"
 #include "menu.h"
 #include "display.h"
-#include "menuAppsBase.h"
 #include "ble.h"
 #include "time.h"
 #include "battery.h"
@@ -14,33 +13,35 @@
 #include "heartrate.h"
 
 
-class NotifyScreen : public TheScreen
+class NotifyScreen : public Screen
 {
   public:
-    NotifyScreen() {
-    }
-
     virtual void pre()
     {
-      displayRect(0, 0, 240, 240, 0x0000);
-      displayPrintln(0, 0, "Notification:");
-      displayImage(120 - (72 / 2), 240-72, 72, 72, symbolMsg);
+      set_gray_screen_style(&lv_font_roboto_28);
+
+      lv_obj_t * img1 = lv_img_create(lv_scr_act(), NULL);
+      lv_img_set_src(img1, &IsymbolDebug);
+      lv_obj_align(img1, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
+      
+      label = lv_label_create(lv_scr_act(), NULL);
+      lv_label_set_text(label, "Notification");
+      lv_obj_align(label, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
+
+      label_msg = lv_label_create(lv_scr_act(), NULL);
+      lv_label_set_long_mode(label_msg, LV_LABEL_LONG_BREAK);
+      lv_obj_set_width(label_msg,240);
+      lv_label_set_text(label_msg, "");
+      lv_label_set_text(label_msg, string2char(get_push_msg()));
+      lv_obj_align(label_msg, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 30);
+
     }
 
     virtual void main()
     {
-      String notification = get_push_msg();
-      if (last_notification != notification) {
-        last_notification = notification;
-        displayRect(0, 9, 240, (150 - 9), 0x0000);
-        displayPrintln(0, 10, notification, 0xFFFF, 0x0000, 2);
-      }
+      lv_label_set_text(label_msg, string2char(get_push_msg()));
     }
 
-    virtual void post()
-    {
-      last_notification = "";
-    }
     virtual void long_click()
     {
       display_home();
@@ -71,5 +72,12 @@ class NotifyScreen : public TheScreen
     }
 
   private:
-    String last_notification = "";
+    lv_obj_t *label, *label_msg;
+
+    char* string2char(String command) {
+      if (command.length() != 0) {
+        char *p = const_cast<char*>(command.c_str());
+        return p;
+      }
+    }
 };

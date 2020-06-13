@@ -41,7 +41,7 @@ int get_battery_percent() {
 }
 
 int mv_to_percent(float mvolts) {
-  if ( mvolts >= 4145 ) return 99;
+  if ( mvolts >= 4145 ) return 100;
   else if ( mvolts > 4010 ) return (99 - (int16_t)(4145 - mvolts) / 13);
   else if ( mvolts > 3920 ) return (90 - (int16_t)(4010 - mvolts) / 9);
   else if ( mvolts > 3850 ) return (80 - (int16_t)(3920 - mvolts) / 7);
