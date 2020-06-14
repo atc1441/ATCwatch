@@ -11,6 +11,25 @@ void init_push() {
 
 }
 
+String filter_string(String str)
+{
+  int i = 0, len = str.length();
+  while (i < len)
+  {
+    char c = str[i];
+    if ((c >= 0x20))
+    {
+      ++i;
+    }
+    else
+    {
+      str.remove(i, 1);
+      --len;
+    }
+  }
+  return str;
+}
+
 void show_push(String pushMSG) {
   int commaIndex = pushMSG.indexOf(',');
   int secondCommaIndex = pushMSG.indexOf(',', commaIndex + 1);
@@ -18,7 +37,7 @@ void show_push(String pushMSG) {
   String MsgText = pushMSG.substring(commaIndex + 1, secondCommaIndex);
   int timeShown = pushMSG.substring(secondCommaIndex + 1, lastCommaIndex).toInt();
   int SymbolNr = pushMSG.substring(lastCommaIndex + 1).toInt();
-  msgText = MsgText;
+  msgText = filter_string(MsgText);
   sleep_up(WAKEUP_BLEPUSH);
   display_notify();
   set_motor_ms();
