@@ -38,13 +38,11 @@ bool my_touchpad_read(lv_indev_drv_t * indev_driver, lv_indev_data_t * data)
     get_read_touch();
     touch_data = get_touch();
     touched = (touch_data.event == 2) ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
-    check_menu(touch_data);
     get_new_touch_interrupt();
   } else {
     if (get_new_touch_interrupt()) {
       touch_data = get_touch();
       touched = (touch_data.gesture == TOUCH_SINGLE_CLICK) ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
-      check_menu(touch_data);
     } else {
       touched = LV_INDEV_STATE_REL;
     }

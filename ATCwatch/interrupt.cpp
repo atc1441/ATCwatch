@@ -195,6 +195,8 @@ void interrupt_button() {
 void interrupt_touch() {
   set_was_touched(true);
   if (!sleep_up(WAKEUP_TOUCH)) {
+    touch_data_struct touch_data = get_touch();
+    check_menu(touch_data);
     set_new_touch_interrupt();
   }
   set_sleep_time();
