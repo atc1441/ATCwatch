@@ -70,8 +70,14 @@ void sleep_touch(bool state) {
   }
 }
 
-void set_new_touch_interrupt(){
+void set_new_touch_interrupt() {
   touch_interrupt = true;
+}
+
+bool get_new_touch_interrupt() {
+  bool temp = touch_interrupt;
+  touch_interrupt = false;
+  return temp;
 }
 
 bool get_was_touched() {
@@ -96,13 +102,13 @@ void get_read_touch() {
   }
   touch_data.gesture = data_raw[0];
   touch_data.touchpoints = data_raw[1];
-  touch_data.event = data_raw[2]>>6;
+  touch_data.event = data_raw[2] >> 6;
   touch_data.xpos = data_raw[3];
   touch_data.ypos = data_raw[5];
-  
+
   set_i2cReading(false);
-  if(!touch_interrupt)touch_data.gesture = 0;
-  touch_interrupt = false;
+  //if (!touch_interrupt)touch_data.gesture = 0;
+  //touch_interrupt = false;
 }
 
 touch_data_struct get_touch() {

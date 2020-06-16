@@ -23,25 +23,32 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
 {
   uint32_t w = (area->x2 - area->x1 + 1);
   uint32_t h = (area->y2 - area->y1 + 1);
-  startWrite();
+  startWrite_display();
   setAddrWindowDisplay(area->x1, area->y1, w, h);
   write_fast_spi(reinterpret_cast<const uint8_t *>(color_p), (w * h * 2));
-  endWrite();
+  endWrite_display();
   lv_disp_flush_ready(disp);
 }
 
 bool my_touchpad_read(lv_indev_drv_t * indev_driver, lv_indev_data_t * data)
 {
   bool touched = false;
-  get_read_touch();
-  touch_data_struct touch_data = get_touch();
-
+  touch_data_struct touch_data;
   if (swipe_enabled()) {
+    get_read_touch();
+    touch_data = get_touch();
     touched = (touch_data.event == 2) ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
+    check_menu(touch_data);
+    get_new_touch_interrupt();
   } else {
-    touched = (touch_data.gesture == TOUCH_SINGLE_CLICK) ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
+    if (get_new_touch_interrupt()) {
+      touch_data = get_touch();
+      touched = (touch_data.gesture == TOUCH_SINGLE_CLICK) ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
+      check_menu(touch_data);
+    } else {
+      touched = LV_INDEV_STATE_REL;
+    }
   }
-  check_menu(touch_data);
   data->state = touched;
   data->point.x = touch_data.xpos;
   data->point.y = touch_data.ypos;
@@ -78,7 +85,7 @@ void init_display() {
 
 void display_enable(bool state) {
   uint8_t temp[2];
-  startWrite();
+  startWrite_display();
   if (state) {
     spiCommand(ST77XX_DISPON);
     spiCommand(ST77XX_SLPOUT);
@@ -86,7 +93,7 @@ void display_enable(bool state) {
     spiCommand(ST77XX_SLPIN);
     spiCommand(ST77XX_DISPOFF);
   }
-  endWrite();
+  endWrite_display();
 }
 
 void setAddrWindowDisplay(uint32_t x, uint32_t y, uint32_t w, uint32_t h)
@@ -123,7 +130,7 @@ void initDisplay() {
   delay(100);
   digitalWrite(LCD_RESET, HIGH);
   delay(100);
-  startWrite();
+  startWrite_display();
   spiCommand(54);
   spiWrite(0);
   temp[0] = 0x00;
@@ -206,7 +213,7 @@ void initDisplay() {
   spiCommand(41);
   spiCommand(0x11);
   spiCommand(0x29);
-  endWrite();
+  endWrite_display();
 }
 
 void spiCommand(uint8_t d) {
@@ -219,12 +226,12 @@ void spiWrite(uint8_t d) {
   write_fast_spi(&d, 1);
 }
 
-void startWrite(void) {
+void startWrite_display(void) {
   enable_spi(true);
   digitalWrite(LCD_CS , LOW);
 }
 
-void endWrite(void) {
+void endWrite_display(void) {
   digitalWrite(LCD_CS , HIGH);
   enable_spi(false);
 }

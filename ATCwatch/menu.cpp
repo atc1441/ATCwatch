@@ -23,11 +23,12 @@
 #include "menu_App.h"
 #include "menu_Demo.h"
 #include "menu_Charging.h"
+#include "menu_Flash.h"
 #include <lvgl.h>
 
 long last_main_run;
 int vars_menu = -1;
-int vars_max_menu = 3;
+int vars_max_menu = 4;
 bool swipe_enabled_bool = false;
 
 BootScreen bootScreen;
@@ -45,6 +46,7 @@ InfosScreen infosScreen;
 AcclScreen acclScreen;
 DemoScreen demoScreen;
 ChargingScreen chargingScreen;
+FlashScreen flashScreen;
 
 app_struct notifyApp = {"Notify", &IsymbolMsg, &notifyScreen};
 app_struct heartApp = {"Heartrate", &IsymbolHeart, &heartScreen};
@@ -61,14 +63,17 @@ app_struct infosApp = {"Infos", &IsymbolInfos, &infosScreen};
 app_struct acclApp = {"Accl", &IsymbolAccl , &acclScreen};
 app_struct demoApp = {"Demo", &IsymbolChart , &demoScreen};
 
+app_struct flashApp = {"Flash_test", &IsymbolChart , &flashScreen};
+
 AppScreen apps1Screen(1, &notifyApp, &heartApp, &debugApp, &animationApp);
 AppScreen apps2Screen(2, &rebootApp, &updateApp, &offApp, &settingsApp);
 AppScreen apps3Screen(3, &infosApp, &acclApp, &demoApp, &batteryApp);
+AppScreen apps4Screen(4, &infosApp, &acclApp, &demoApp, &flashApp);
 
 Screen *currentScreen = &homeScreen;
 Screen *oldScreen = &homeScreen;
 Screen *lastScreen = &homeScreen;
-Screen *menus[4] = {&homeScreen, &apps1Screen, &apps2Screen, &apps3Screen};
+Screen *menus[5] = {&homeScreen, &apps1Screen, &apps2Screen, &apps3Screen, &apps4Screen};
 
 void init_menu() {
 

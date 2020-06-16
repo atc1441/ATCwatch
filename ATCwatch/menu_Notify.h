@@ -21,7 +21,7 @@ class NotifyScreen : public Screen
       set_gray_screen_style(&lv_font_roboto_28);
 
       lv_obj_t * img1 = lv_img_create(lv_scr_act(), NULL);
-      lv_img_set_src(img1, &IsymbolDebug);
+      lv_img_set_src(img1, &IsymbolMsg);
       lv_obj_align(img1, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
       
       label = lv_label_create(lv_scr_act(), NULL);
