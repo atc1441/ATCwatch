@@ -98,6 +98,7 @@ void display_charging() {
 }
 
 void display_booting() {
+  set_gray_screen_style();
   lastScreen = currentScreen;
   currentScreen = &bootScreen;
   oldScreen = &bootScreen;

@@ -1,5 +1,4 @@
 #include "ble.h"
-
 #include "pinout.h"
 #include <BLEPeripheral.h>
 #include "sleep.h"
@@ -85,7 +84,6 @@ bool get_vars_ble_connected() {
 void set_vars_ble_connected(bool state) {
   vars_ble_connected = state;
 }
-
 
 void filterCmd(String Command) {
   if (Command == "AT+BOND") {

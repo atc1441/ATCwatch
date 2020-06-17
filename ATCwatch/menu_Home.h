@@ -23,7 +23,7 @@ class HomeScreen : public Screen
     {
       time_data = get_time();
       accl_data = get_accl_data();
-      
+
       lv_style_copy( &st, &lv_style_plain );
       st.text.color = lv_color_hsv_to_rgb(10, 5, 95);
       st.text.font = &mksd50;
@@ -49,6 +49,7 @@ class HomeScreen : public Screen
 
       lv_style_copy(&style_ble, lv_label_get_style(label_ble, LV_LABEL_STYLE_MAIN));
       style_ble.text.color = LV_COLOR_RED;
+      style_ble.text.font = LV_FONT_DEFAULT;
       lv_obj_set_style(label_ble, &style_ble);
 
       lv_style_copy(&style_battery, lv_label_get_style(label_battery, LV_LABEL_STYLE_MAIN));
@@ -81,6 +82,12 @@ class HomeScreen : public Screen
       lv_obj_align(img_msg, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 0, -8);
 
       label_msg = lv_label_create(lv_scr_act(), NULL);
+
+      lv_style_copy(&style_msg, lv_label_get_style(label_ble, LV_LABEL_STYLE_MAIN));
+      style_msg.text.color = lv_color_hsv_to_rgb(10, 5, 95);
+      style_msg.text.font = &sans_regular;
+      lv_obj_set_style(label_msg, &style_msg);
+
       lv_obj_set_width(label_msg, 240);
       lv_label_set_text(label_msg, " ");
       lv_label_set_text(label_msg, string2char(get_push_msg(30)));
@@ -143,7 +150,7 @@ class HomeScreen : public Screen
     lv_obj_t *label, *label_heart, *label_steps, *label_msg;
     lv_obj_t *label_time, *label_date;
     lv_obj_t *label_ble, *label_battery;
-    lv_style_t style_ble, style_battery;
+    lv_style_t style_ble, style_battery, style_msg;
     lv_obj_t * img_heart, *img_steps, *img_msg;
 
     char* string2char(String command) {

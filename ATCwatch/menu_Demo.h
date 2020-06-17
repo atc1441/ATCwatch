@@ -54,7 +54,7 @@ class DemoScreen : public Screen
       lv_slider_set_style(slider, LV_SLIDER_STYLE_BG, &style_bg);
       lv_slider_set_style(slider, LV_SLIDER_STYLE_INDIC, &style_indic);
       lv_slider_set_style(slider, LV_SLIDER_STYLE_KNOB, &style_knob);
-      lv_obj_align(slider, NULL, LV_ALIGN_CENTER, 0, 0);
+      lv_obj_align(slider, NULL, LV_ALIGN_CENTER, 0, 0);  
     }
 
     virtual void main()
@@ -74,5 +74,7 @@ class DemoScreen : public Screen
     }
 
   private:
+    lv_style_t st;
+    lv_obj_t *label_time;
     lv_obj_t *label;
 };

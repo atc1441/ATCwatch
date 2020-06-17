@@ -93,6 +93,11 @@ class AppScreen : public Screen
       dec_vars_menu();
     }
 
+    virtual void right()
+    {
+      display_home();
+    }
+    
     virtual void lv_event_class(lv_obj_t * object, lv_event_t event)
     {
       if (event == LV_EVENT_SHORT_CLICKED) {
@@ -106,11 +111,6 @@ class AppScreen : public Screen
           change_screen(_app4->_screen);
         }
       }
-    }
-
-    virtual void right()
-    {
-      set_last_menu();
     }
 
   private:
