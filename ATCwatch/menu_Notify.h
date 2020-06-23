@@ -19,22 +19,18 @@ class NotifyScreen : public Screen
   public:
     virtual void pre()
     {
-      set_gray_screen_style(&sans_bold28);
+      set_gray_screen_style(&sans_regular);
 
       lv_obj_t * img1 = lv_img_create(lv_scr_act(), NULL);
       lv_img_set_src(img1, &IsymbolMsg);
       lv_obj_align(img1, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
-      
-      label = lv_label_create(lv_scr_act(), NULL);
-      lv_label_set_text(label, "Notification");
-      lv_obj_align(label, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
 
       label_msg = lv_label_create(lv_scr_act(), NULL);
       lv_label_set_long_mode(label_msg, LV_LABEL_LONG_BREAK);
       lv_obj_set_width(label_msg,240);
       lv_label_set_text(label_msg, "");
       lv_label_set_text(label_msg, string2char(get_push_msg()));
-      lv_obj_align(label_msg, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 30);
+      lv_obj_align(label_msg, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
 
     }
 
