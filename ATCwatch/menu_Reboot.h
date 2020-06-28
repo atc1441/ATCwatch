@@ -20,7 +20,7 @@ class RebootScreen : public Screen
     {
       static const char * btns[] = {"Yes", "No", ""};
       lv_obj_t * mbox1 = lv_mbox_create(lv_scr_act(), NULL);
-      lv_mbox_set_text(mbox1, "Reboot ?");
+      lv_mbox_set_text(mbox1, "Reboot?");
       lv_mbox_add_btns(mbox1, btns);
       lv_obj_set_width(mbox1, 200);
       lv_obj_set_event_cb(mbox1, event_handler);
@@ -45,7 +45,7 @@ class RebootScreen : public Screen
     {
     }
 
-    
+
   private:
 
     static void event_handler(lv_obj_t * obj, lv_event_t event)
