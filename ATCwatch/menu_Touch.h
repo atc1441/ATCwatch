@@ -42,6 +42,9 @@ class TouchScreen : public Screen
       label_versionInfo = lv_label_create(lv_scr_act(), NULL);
       lv_label_set_text_fmt(label_versionInfo, "Tp Version: %02X %02X %02X %02X", touch_data.version15, touch_data.versionInfo[0], touch_data.versionInfo[1], touch_data.versionInfo[2]);
       lv_obj_align(label_versionInfo, lv_scr_act(), LV_ALIGN_IN_TOP_LEFT, 10, 125);
+      label_int = lv_label_create(lv_scr_act(), NULL);
+      lv_label_set_text_fmt(label_int, "Interrupt: %i", digitalRead(TP_INT));  
+      lv_obj_align(label_int, lv_scr_act(), LV_ALIGN_IN_TOP_LEFT, 10, 145);
     }
 
     virtual void main()
@@ -52,6 +55,7 @@ class TouchScreen : public Screen
       lv_label_set_text_fmt(label_event, "Event: %02X", touch_data.event);
       lv_label_set_text_fmt(label_xpos, "X: %i", touch_data.xpos);
       lv_label_set_text_fmt(label_ypos, "Y: %i", touch_data.ypos);
+      lv_label_set_text_fmt(label_int, "Interrupt: %i", digitalRead(TP_INT));
     }
 
     virtual void up()
@@ -73,5 +77,5 @@ class TouchScreen : public Screen
   private:
     touch_data_struct touch_data;
     lv_obj_t *label;
-    lv_obj_t *label_gesture,*label_touchpoints,*label_event,*label_xpos,*label_ypos,*label_versionInfo;
+    lv_obj_t *label_gesture,*label_touchpoints,*label_event,*label_xpos,*label_ypos,*label_versionInfo,*label_int,*label_a5;
 };

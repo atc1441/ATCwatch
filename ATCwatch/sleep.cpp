@@ -37,10 +37,10 @@ bool get_sleep() {
 
 bool sleep_up(int reason) {
   if (sleep_sleeping) {
+    sleep_touch(false);
     wakeup_reason = reason;
     sleep_sleeping = false;
     set_sleep_time();
-    // sleep_touch(false);
     display_enable(true);
     set_backlight();
     if (get_charge()) {
@@ -65,6 +65,7 @@ int get_wakeup_reason() {
 }
 
 void disable_hardware() {
+  sleep_touch(true);
   set_backlight(0);
   inc_tick();
   display_home();
@@ -72,7 +73,6 @@ void disable_hardware() {
   end_hrs3300();
   set_led(0);
   set_motor(0);
-  //sleep_touch(true);
   display_enable(false);
   NRF_SAADC ->ENABLE = 0; //disable ADC
   NRF_PWM0  ->ENABLE = 0; //disable all pwm instance

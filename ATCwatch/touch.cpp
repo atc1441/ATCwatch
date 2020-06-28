@@ -32,14 +32,13 @@ void init_touch() {
 }
 
 void sleep_touch(bool state) {
-  touch_enable = false;
   digitalWrite(TP_RESET, LOW);
   delay(5);
   digitalWrite(TP_RESET, HIGH );
   delay(50);
   if (state) {
-    byte standby_value[1] = {0x03};
-    user_i2c_write(touch_dev_addr, 0xA5, standby_value, 1);
+    byte standby_value = 0x03;
+    user_i2c_write(touch_dev_addr, 0xA5, &standby_value, 1);
   }
 }
 
