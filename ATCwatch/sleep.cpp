@@ -72,7 +72,7 @@ void disable_hardware() {
   end_hrs3300();
   set_led(0);
   set_motor(0);
-  sleep_touch(true);
+  //sleep_touch(true);
   display_enable(false);
   NRF_SAADC ->ENABLE = 0; //disable ADC
   NRF_PWM0  ->ENABLE = 0; //disable all pwm instance
