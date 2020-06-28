@@ -24,6 +24,7 @@
 #include "menu_Demo.h"
 #include "menu_Charging.h"
 #include "menu_Flash.h"
+#include "menu_Touch.h"
 #include <lvgl.h>
 
 long last_main_run;
@@ -47,6 +48,7 @@ AcclScreen acclScreen;
 DemoScreen demoScreen;
 ChargingScreen chargingScreen;
 FlashScreen flashScreen;
+TouchScreen touchScreen;
 
 app_struct notifyApp = {"Notify", &IsymbolMsg, &notifyScreen};
 app_struct heartApp = {"Heartrate", &IsymbolHeart, &heartScreen};
@@ -64,11 +66,12 @@ app_struct acclApp = {"Accl", &IsymbolAccl , &acclScreen};
 app_struct demoApp = {"Demo", &IsymbolChart , &demoScreen};
 
 app_struct flashApp = {"Flash_test", &IsymbolChart , &flashScreen};
+app_struct touchApp = {"Touch", &IsymbolMouse , &touchScreen};
 
 AppScreen apps1Screen(1, &notifyApp, &heartApp, &debugApp, &animationApp);
 AppScreen apps2Screen(2, &rebootApp, &updateApp, &offApp, &settingsApp);
 AppScreen apps3Screen(3, &infosApp, &acclApp, &demoApp, &batteryApp);
-AppScreen apps4Screen(4, &flashApp, &flashApp, &flashApp, &flashApp);
+AppScreen apps4Screen(4, &flashApp, &touchApp, &flashApp, &flashApp);
 
 Screen *currentScreen = &homeScreen;
 Screen *oldScreen = &homeScreen;

@@ -44,6 +44,13 @@ class SettingsScreen : public Screen
       lv_style_copy(&style_battery, lv_label_get_style(label_battery, LV_LABEL_STYLE_MAIN));
       style_battery.text.color = lv_color_hsv_to_rgb(10, 5, 95);
       lv_obj_set_style(label_battery, &style_battery);
+
+      touch_data_struct touch_data;
+      touch_data = get_touch();
+      a789 = lv_label_create(lv_scr_act(), NULL);
+      lv_label_set_text(a789, "000");
+      lv_label_set_text_fmt(a789, "Tp Version: %02X %02X %02X", touch_data.versionInfo[0], touch_data.versionInfo[1], touch_data.versionInfo[2]);
+      lv_obj_align(a789, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 0, 0);
     }
 
     virtual void main()
@@ -76,9 +83,10 @@ class SettingsScreen : public Screen
     {
       set_last_menu();
     }
-    
+
   private:
     lv_obj_t *label;
     lv_obj_t *label_battery, *label_battery_big, *label_backlight_big;
     lv_style_t style_battery, st;
+    lv_obj_t *a789;
 };

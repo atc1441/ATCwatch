@@ -25,9 +25,9 @@ void init_touch() {
     digitalWrite(TP_RESET, HIGH );
     delay(50);
 
-    byte reg_temp[3];
-    user_i2c_read(touch_dev_addr, 0x15, reg_temp, 1);
-    user_i2c_read(touch_dev_addr, 0xA7, reg_temp, 3);
+    user_i2c_read(touch_dev_addr, 0x15, &touch_data.version15, 1);
+    delay(5);
+    user_i2c_read(touch_dev_addr, 0xA7, touch_data.versionInfo, 3);
   }
 }
 
@@ -63,7 +63,7 @@ void set_was_touched(bool state) {
 
 void get_read_touch() {
   if (!touch_enable)init_touch();
-  
+
   byte data_raw[8];
   user_i2c_read(touch_dev_addr, 0x01, data_raw, 6);
 

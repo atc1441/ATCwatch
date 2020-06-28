@@ -18,6 +18,8 @@ struct touch_data_struct {
   byte event;
   int xpos;
   int ypos;
+  uint8_t version15;
+  uint8_t versionInfo[3];
 };
 void init_touch();
 void sleep_touch(bool state);
