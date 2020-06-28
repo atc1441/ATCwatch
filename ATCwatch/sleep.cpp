@@ -2,6 +2,7 @@
 #include "sleep.h"
 #include "Arduino.h"
 #include "pinout.h"
+#include "i2c.h"
 #include "battery.h"
 #include "display.h"
 #include "backlight.h"
@@ -19,7 +20,6 @@ bool sleep_enable = false;
 bool sleep_sleeping = false;
 int wakeup_reason = 0;
 long lastaction = 0;
-volatile bool i2cReading = false;
 long last_sleep_check;
 
 void init_sleep() {
@@ -111,14 +111,6 @@ bool get_timed_int() {
   return temp;
 }
 
-void set_i2cReading(bool state) {
-  i2cReading = state;
-}
-
-bool get_i2cReading() {
-  return i2cReading;
-}
-
 #define LF_FREQUENCY 32768UL
 #define SECONDS(x) ((uint32_t)((LF_FREQUENCY * x) + 0.5))
 #define wakeUpSeconds 0.040
@@ -151,7 +143,7 @@ void RTC2_IRQHandler(void)
     shot = true;
     if (!sleep_sleeping)inc_tick();
     check_inputoutput_times();
-    if (!i2cReading)get_heartrate_ms();
+    if (!get_i2cReading())get_heartrate_ms();
   }
 }
 #ifdef __cplusplus

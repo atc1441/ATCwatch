@@ -1,10 +1,10 @@
 #include "accl.h"
 #include "Arduino.h"
-#include <Wire.h>
+#include "i2c.h"
 #include "pinout.h"
 #include "bma423.h"
 //https://github.com/BoschSensortec/BMA423-Sensor-API
-//Many Thanks to Daniel Thompson(https://github.com/daniel-thompson/wasp-os) to giving the Hint with the BMA423 Library
+//Many Thanks to Daniel Thompson(https://github.com/daniel-thompson/wasp-os) to giving the Hint to use a modified BMA423 Library
 #include "watchdog.h"
 #include "inputoutput.h"
 #include "ble.h"
@@ -19,8 +19,6 @@ struct bma4_accel_config accel_conf;
 
 void init_accl() {
   pinMode(BMA421_INT, INPUT);
-  Wire.begin();
-  Wire.setClock(250000);
 
   uint16_t rslt = 0;
   uint8_t init_seq_status = 0;
@@ -89,10 +87,8 @@ uint16_t do_accl_init() {
 }
 
 void reset_accl() {
-  Wire.beginTransmission(BMA4_I2C_ADDR_PRIMARY);
-  Wire.write(0x7E);
-  Wire.write(0xB6);
-  Wire.endTransmission();
+  byte standby_value[1] = {0xB6};
+  user_i2c_write(dev_addr, 0x7E, standby_value, 1);
 }
 
 void reset_step_counter() {
@@ -183,32 +179,14 @@ void get_accl_int() {
 
 int8_t user_i2c_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t length, void *intf_ptr)
 {
-
-  set_i2cReading(true);
-  Wire.beginTransmission(dev_addr);
-  Wire.write(reg_addr);
-  if ( Wire.endTransmission())return -1;
-  Wire.requestFrom(dev_addr, length);
-  for (int i = 0; i < length; i++) {
-    *reg_data++ = Wire.read();
-  }
-  set_i2cReading(false);
-  return 0;
+  return user_i2c_read(dev_addr, reg_addr, reg_data, length);
 }
 
 int8_t user_i2c_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t length, void *intf_ptr)
 {
-  byte error;
-  set_i2cReading(true);
-  Wire.beginTransmission(dev_addr);
-  Wire.write(reg_addr);
-  for (int i = 0; i < length; i++) {
-    Wire.write(*reg_data++);
-  }
-  if ( Wire.endTransmission())return -1;
-  set_i2cReading(false);
-  return 0;
+  return user_i2c_write(dev_addr, reg_addr, reg_data, length);
 }
+
 
 void user_delay(uint32_t period_us, void *intf_ptr)
 {

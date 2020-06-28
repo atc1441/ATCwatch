@@ -1,13 +1,14 @@
-
 #include "touch.h"
 #include "Arduino.h"
 #include "pinout.h"
 #include "sleep.h"
-#include <Wire.h>
+#include "i2c.h"
 
 int touch_enable = false;
 bool was_touched = false;
 bool touch_interrupt = false;
+
+uint8_t touch_dev_addr = 0x15;
 
 touch_data_struct touch_data;
 
@@ -16,8 +17,6 @@ void init_touch() {
     touch_enable = true;
     pinMode(TP_RESET, OUTPUT);
     pinMode(TP_INT, INPUT);
-    Wire.begin();
-    Wire.setClock(200000);
 
     digitalWrite(TP_RESET, HIGH );
     delay(50);
@@ -26,31 +25,9 @@ void init_touch() {
     digitalWrite(TP_RESET, HIGH );
     delay(50);
 
-    set_i2cReading(true);
-    Wire.beginTransmission(0x15);
-    Wire.write(0x15);
-    Wire.endTransmission();
-    Wire.requestFrom(0x15, 1);
-    byte t1 = Wire.read();
-
-    Wire.beginTransmission(0x15);
-    Wire.write(0xA7);
-    Wire.endTransmission();
-    Wire.requestFrom(0x15, 1);
-    byte t2 = Wire.read();
-
-    Wire.beginTransmission(0x15);
-    Wire.write(0xA8);
-    Wire.endTransmission();
-    Wire.requestFrom(0x15, 1);
-    byte t3 = Wire.read();
-
-    Wire.beginTransmission(0x15);
-    Wire.write(0xA9);
-    Wire.endTransmission();
-    Wire.requestFrom(0x15, 1);
-    byte t4 = Wire.read();
-    set_i2cReading(false);
+    byte reg_temp[3];
+    user_i2c_read(touch_dev_addr, 0x15, reg_temp, 1);
+    user_i2c_read(touch_dev_addr, 0xA7, reg_temp, 3);
   }
 }
 
@@ -61,12 +38,8 @@ void sleep_touch(bool state) {
   digitalWrite(TP_RESET, HIGH );
   delay(50);
   if (state) {
-    set_i2cReading(true);
-    Wire.beginTransmission(0x15);
-    Wire.write(0xA5);
-    Wire.write(0x03);
-    Wire.endTransmission();
-    set_i2cReading(false);
+    byte standby_value[1] = {0x03};
+    user_i2c_write(touch_dev_addr, 0xA5, standby_value, 1);
   }
 }
 
@@ -90,28 +63,17 @@ void set_was_touched(bool state) {
 
 void get_read_touch() {
   if (!touch_enable)init_touch();
-  set_i2cReading(true);
+  
   byte data_raw[8];
-  Wire.beginTransmission(0x15);
-  Wire.write(1);
-  if (Wire.endTransmission())return;
-  Wire.requestFrom(0x15, 6);
-  for (int x = 0; x < 6; x++)
-  {
-    data_raw[x] = Wire.read();
-  }
+  user_i2c_read(touch_dev_addr, 0x01, data_raw, 6);
+
   touch_data.gesture = data_raw[0];
   touch_data.touchpoints = data_raw[1];
   touch_data.event = data_raw[2] >> 6;
   touch_data.xpos = data_raw[3];
   touch_data.ypos = data_raw[5];
-
-  set_i2cReading(false);
-  //if (!touch_interrupt)touch_data.gesture = 0;
-  //touch_interrupt = false;
 }
 
 touch_data_struct get_touch() {
-  // get_read_touch();
   return touch_data;
 }

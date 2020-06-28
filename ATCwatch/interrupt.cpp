@@ -1,6 +1,7 @@
 
 #include "interrupt.h"
 #include "pinout.h"
+#include "i2c.h"
 #include "menu.h"
 #include "sleep.h"
 #include "accl.h"

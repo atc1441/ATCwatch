@@ -55,7 +55,7 @@ app_struct debugApp = {"Debug", &IsymbolDebug, &debugScreen};
 
 app_struct rebootApp = {"Reboot", &IsymbolReboot, &rebootScreen};
 app_struct updateApp = {"Bootloader", &IsymbolBootloader, &updateScreen};
-app_struct offApp = {"Schutdown", &IsymbolShutdown, &offScreen};
+app_struct offApp = {"Shutdown", &IsymbolShutdown, &offScreen};
 app_struct settingsApp = {"Settings", &IsymbolSettings, &settingsScreen};
 
 app_struct animationApp = {"Animation", &IsymbolAnimation, &animationScreen};

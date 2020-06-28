@@ -12,7 +12,7 @@
 #include "accl.h"
 #include "push.h"
 #include "heartrate.h"
-#include "mksd50.h"
+#include "fonts.h"
 #include <lvgl.h>
 
 
