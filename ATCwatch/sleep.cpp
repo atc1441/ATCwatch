@@ -40,7 +40,7 @@ bool sleep_up(int reason) {
     wakeup_reason = reason;
     sleep_sleeping = false;
     set_sleep_time();
-    sleep_touch(false);
+    // sleep_touch(false);
     display_enable(true);
     set_backlight();
     if (get_charge()) {
