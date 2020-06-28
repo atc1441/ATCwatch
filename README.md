@@ -32,5 +32,6 @@ If you want to use the code or parts of it commercial please write an email to: 
 ## Credits:
 Many Thanks to Daniel Thompson(https://github.com/daniel-thompson/wasp-os) to giving the Hint with the BMA423 Library
 This way interrupts are finally possible with it.
-This code uses the BMA421 Library wich is made by Bosch and this is under copyright by Bosch Sensortech GmbH
+
+This code uses the BMA423 Library wich is made by Bosch and this is under copyright by Bosch Sensortech GmbH
 https://github.com/BoschSensortec/BMA423-Sensor-API
