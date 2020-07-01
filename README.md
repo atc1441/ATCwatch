@@ -35,3 +35,8 @@ This way interrupts are finally possible with it.
 
 This code uses the BMA423 Library wich is made by Bosch and this is under copyright by Bosch Sensortech GmbH
 https://github.com/BoschSensortec/BMA423-Sensor-API
+
+## FAQ / Errors
+#### Code does not compile / Arduino puts out errors.
+---> This code is meant to be used with the D6Arduino.rar on Windows and is tested that way, sometimes i make changes to the D6Arduino.rar so you need to update that also when getting the newest firmware, i will try to add information when you need to update it but can not guaranty this info, so just try an update if it does not work.
+
