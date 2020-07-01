@@ -40,3 +40,4 @@ https://github.com/BoschSensortec/BMA423-Sensor-API
 #### Code does not compile / Arduino puts out errors.
 ---> This code is meant to be used with the D6Arduino.rar on Windows and is tested that way, sometimes i make changes to the D6Arduino.rar so you need to update that also when getting the newest firmware, i will try to add information when you need to update it but can not guaranty this info, so just try an update if it does not work.
 
+The latest update that needs the newest D6Arduino.rar file is this: https://github.com/atc1441/ATCwatch/commit/0dd3138d10d5c8f1a776ad1b7f1d4819d686e46f
