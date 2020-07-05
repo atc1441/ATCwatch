@@ -29,18 +29,18 @@ class HomeScreen : public Screen
       st.text.font = &mksd50;
 
       label_time = lv_label_create(lv_scr_act(), NULL);
-      lv_label_set_text(label_time, "00:00:00");
+      lv_label_set_text_fmt(label_time,  "%02i:%02i:%02i", time_data.hr, time_data.min, time_data.sec);
       lv_obj_set_style( label_time, &st );
       lv_obj_align(label_time, NULL, LV_ALIGN_CENTER, 0, -40);
       label_date = lv_label_create(lv_scr_act(), NULL);
-      lv_label_set_text(label_date, "00.00.0000");
+      lv_label_set_text_fmt(label_date, "%02i.%02i.%04i", time_data.day, time_data.month, time_data.year);
       lv_obj_set_style( label_date, &st );
       lv_obj_align(label_date, NULL, LV_ALIGN_CENTER, 0, 30);
 
 
       label_battery = lv_label_create(lv_scr_act(), NULL);
       lv_obj_align(label_battery, lv_scr_act(), LV_ALIGN_IN_TOP_LEFT, 25, 5);
-      lv_label_set_text(label_battery, "---%");
+      lv_label_set_text_fmt(label_battery, "%i%%", get_battery_percent());
 
 
       label_ble = lv_label_create(lv_scr_act(), NULL);
@@ -63,7 +63,7 @@ class HomeScreen : public Screen
 
       label_heart = lv_label_create(lv_scr_act(), NULL);
       lv_obj_set_width(label_heart, 240);
-      lv_label_set_text(label_heart, "0");
+      lv_label_set_text_fmt(label_heart, "%i", get_last_heartrate());
       lv_obj_align(label_heart, img_heart, LV_ALIGN_OUT_RIGHT_MID, 2, 0);
 
 
@@ -73,7 +73,7 @@ class HomeScreen : public Screen
 
       label_steps = lv_label_create(lv_scr_act(), NULL);
       lv_obj_set_width(label_steps, 240);
-      lv_label_set_text(label_steps, "0");
+      lv_label_set_text_fmt(label_steps, "%i", accl_data.steps);
       lv_obj_align(label_steps, img_steps, LV_ALIGN_OUT_RIGHT_MID, 2, 0);
 
 
@@ -98,13 +98,9 @@ class HomeScreen : public Screen
     {
       time_data = get_time();
       accl_data = get_accl_data();
-      char time_string[14];
-      sprintf(time_string, "%02i:%02i:%02i", time_data.hr, time_data.min, time_data.sec);
-      char date_string[14];
-      sprintf(date_string, "%02i.%02i.%04i", time_data.day, time_data.month, time_data.year);
 
-      lv_label_set_text(label_time, time_string);
-      lv_label_set_text(label_date, date_string);
+      lv_label_set_text_fmt(label_time,  "%02i:%02i:%02i", time_data.hr, time_data.min, time_data.sec);
+      lv_label_set_text_fmt(label_date, "%02i.%02i.%04i", time_data.day, time_data.month, time_data.year);
 
       lv_label_set_text_fmt(label_battery, "%i%%", get_battery_percent());
 
@@ -160,3 +156,5 @@ class HomeScreen : public Screen
       }
     }
 };
+
+HomeScreen homeScreen;

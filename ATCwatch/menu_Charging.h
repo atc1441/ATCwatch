@@ -71,3 +71,5 @@ class ChargingScreen : public Screen
     lv_obj_t *label_battery, *label_battery_big, *label_backlight_big;
     lv_style_t style_battery, st;
 };
+
+ChargingScreen chargingScreen;

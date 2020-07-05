@@ -58,3 +58,5 @@ class UpdateScreen : public Screen
       }
     }
 };
+
+UpdateScreen updateScreen;

@@ -58,3 +58,5 @@ class RebootScreen : public Screen
       }
     }
 };
+
+RebootScreen rebootScreen;

@@ -78,3 +78,5 @@ class DebugScreen : public Screen
     char * wakeup_reason[10] = {"Unset", "Push", "Connect", "Disconnect", "Charged", "Charge", "Button", "Touch", "Accl", "AcclINT"};
 
 };
+
+DebugScreen debugScreen;

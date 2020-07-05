@@ -14,7 +14,6 @@ void display_screen(bool ignoreWait = false);
 void check_menu(touch_data_struct touch_data);
 uint32_t get_menu_delay_time();
 int get_sleep_time_menu();
-void select_app(int id);
 void change_screen(Screen* screen);
 void set_last_menu();
 void set_swipe_enabled(bool state);

@@ -39,6 +39,16 @@ void SetDateTimeString(String datetime) {
   setTime( hr, min, sec, day, month, year);
 }
 
+void SetDate(int year, int month, int day) {
+  time_data = get_time();
+  setTime( time_data.hr, time_data.min, time_data.sec, day, month, year);
+}
+
+void SetTime(int hr, int min) {
+  time_data = get_time();
+  setTime( hr, min, 0, time_data.day, time_data.month, time_data.year);
+}
+
 String GetDateTimeString() {
   String datetime = String(year());
   if (month() < 10) datetime += "0";

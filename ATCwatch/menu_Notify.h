@@ -78,3 +78,5 @@ class NotifyScreen : public Screen
       }
     }
 };
+
+NotifyScreen notifyScreen;

@@ -60,3 +60,5 @@ class FlashScreen : public Screen
       uint8_t temp[8];
     lv_obj_t *label, *label_x, *label_y;
 };
+
+FlashScreen flashScreen;

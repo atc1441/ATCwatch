@@ -58,3 +58,5 @@ class OffScreen : public Screen
       }
     }
 };
+
+OffScreen offScreen;

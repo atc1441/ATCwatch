@@ -78,3 +78,5 @@ class AcclScreen : public Screen
     lv_obj_t *label_temp, *label_steps, *label_result;
     lv_obj_t *label_enabled, *label_interrupt, *label_activity;
 };
+
+AcclScreen acclScreen;

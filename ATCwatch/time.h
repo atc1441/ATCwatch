@@ -15,4 +15,6 @@ struct time_data_struct {
 void init_time();
 time_data_struct get_time();
 void SetDateTimeString(String datetime);
+void SetDate(int year, int month, int day);
+void SetTime(int hr, int min);
 String GetDateTimeString();

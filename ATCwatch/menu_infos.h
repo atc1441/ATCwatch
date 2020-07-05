@@ -62,3 +62,5 @@ class InfosScreen : public Screen
   private:
     lv_obj_t *label, *label_version, *label_mac;
 };
+
+InfosScreen infosScreen;

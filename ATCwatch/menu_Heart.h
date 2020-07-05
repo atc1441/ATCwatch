@@ -79,3 +79,5 @@ class HeartScreen : public Screen
     lv_obj_t *label, *label_hr, *label_hr_last;
 
 };
+
+HeartScreen heartScreen;

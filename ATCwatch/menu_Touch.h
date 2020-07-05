@@ -79,3 +79,5 @@ class TouchScreen : public Screen
     lv_obj_t *label;
     lv_obj_t *label_gesture,*label_touchpoints,*label_event,*label_xpos,*label_ypos,*label_versionInfo,*label_int,*label_a5;
 };
+
+TouchScreen touchScreen;
