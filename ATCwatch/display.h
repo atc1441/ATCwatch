@@ -41,11 +41,17 @@
 #define ST77XX_RDID4 0xDD
 
 void init_display();
+bool drawChar(uint32_t x, uint32_t y, unsigned char c, uint16_t color, uint16_t bg, uint32_t size);
+void displayPrintln(uint32_t x, uint32_t y, String text, uint16_t color = 0xFFFF, uint16_t bg = 0x0000, uint32_t size = 1);
+void displayRect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint16_t color);
+void displayImage(uint32_t x, uint32_t y, uint32_t w, uint32_t h, const uint16_t *buffer);
 void display_enable(bool state);
-void inc_tick();
+void display_clear();
 
 void setAddrWindowDisplay(uint32_t x, uint32_t y, uint32_t w, uint32_t h);
 void initDisplay();
 void spiCommand(uint8_t d);
-void startWrite_display(void);
-void endWrite_display(void);
+void spiWrite(uint8_t d);
+void startWrite(void);
+void endWrite(void);
+void displayColor(uint16_t color = 0x0000);

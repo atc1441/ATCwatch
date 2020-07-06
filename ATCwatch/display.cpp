@@ -1,8 +1,8 @@
 #include "display.h"
 
-#include <lvgl.h>
 #include "fast_spi.h"
 #include "images.h"
+#include "font57.h"
 #include "battery.h"
 #include "touch.h"
 #include "accl.h"
@@ -15,75 +15,124 @@
 #include "time.h"
 #include "push.h"
 
-#define buffer_lcd_size LV_HOR_RES_MAX * 30
-static lv_disp_buf_t disp_buf;
-static lv_color_t buf[buffer_lcd_size];
-
-void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
-{
-  uint32_t w = (area->x2 - area->x1 + 1);
-  uint32_t h = (area->y2 - area->y1 + 1);
-  startWrite_display();
-  setAddrWindowDisplay(area->x1, area->y1, w, h);
-  write_fast_spi(reinterpret_cast<const uint8_t *>(color_p), (w * h * 2));
-  endWrite_display();
-  lv_disp_flush_ready(disp);
-}
-
-bool my_touchpad_read(lv_indev_drv_t * indev_driver, lv_indev_data_t * data)
-{
-  bool touched = false;
-  touch_data_struct touch_data;
-  if (swipe_enabled()) {
-    get_read_touch();
-    touch_data = get_touch();
-    touched = (touch_data.event == 2) ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
-    get_new_touch_interrupt();
-  } else {
-    if (get_new_touch_interrupt()) {
-      touch_data = get_touch();
-      touched = (touch_data.gesture == TOUCH_SINGLE_CLICK) ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
-    } else {
-      touched = LV_INDEV_STATE_REL;
-    }
-  }
-  data->state = touched;
-  data->point.x = touch_data.xpos;
-  data->point.y = touch_data.ypos;
-  return false;
-}
-
-void inc_tick() {
-  lv_tick_inc(40);
-}
+#define LCD_BUFFER_SIZE 15000
+uint8_t lcd_buffer[LCD_BUFFER_SIZE+4];
+uint32_t widthheigthWindow = 0;
+bool last_uni_char = false;
+unsigned char last_char;
 
 void init_display() {
   initDisplay();
-  lv_init();
-  lv_disp_buf_init(&disp_buf, buf, NULL, buffer_lcd_size);
+  display_clear();
+}
 
-  lv_disp_drv_t disp_drv;
-  lv_disp_drv_init(&disp_drv);
-  disp_drv.hor_res = 240;
-  disp_drv.ver_res = 240;
-  disp_drv.flush_cb = my_disp_flush;
-  disp_drv.buffer = &disp_buf;
-  lv_disp_drv_register(&disp_drv);
+bool drawChar(uint32_t x, uint32_t y, unsigned char c, uint16_t color, uint16_t bg, uint32_t size) {
+  if (c < 32)return false;
+  if (c >= 127) {
+    if (!last_uni_char) {
+      last_char = c;
+      last_uni_char = true;
+      return false;
+    } else {
+      last_uni_char = false;
+      if (last_char == 0xC3) {
+        switch (c) {
+          case 0x84://Ä
+            c = 0x8E;
+            break;
+          case 0xA4://ä
+            c = 0x84;
+            break;
+          case 0x96://Ö
+            c = 0x99;
+            break;
+          case 0xB6://ö
+            c = 0x94;
+            break;
+          case 0x9C://Ü
+            c = 0x9A;
+            break;
+          case 0xBC://ü
+            c = 0x81;
+            break;
+          case 0x9F://ß
+            c = 0x98;
+            break;
+          default:
+            return false;
+            break;
+        }
+      } else if (last_char == 0xF0 && c == 0x9F)
+        c = 0x02;
+      else
+        return false;
+    }
+  }
+  for (int8_t i = 0; i < 5; i++) {
+    uint8_t line = font57[c * 5 + i];
+    for (int8_t j = 0; j < 8; j++, line >>= 1) {
+      if (line & 1) {
+        displayRect(x + i * size, y + j * size, size, size, color);
+      } else if (bg != color) {
+        displayRect(x + i * size, y + j * size, size, size, bg);
+      }
+    }
+  }
+  if (bg != color) {
+    displayRect(x + 5 * size, y, size, 8 * size, bg);
+  }
+  return true;
+}
 
-  lv_indev_drv_t indev_drv;
-  lv_indev_drv_init(&indev_drv);
-  indev_drv.type = LV_INDEV_TYPE_POINTER;
-  indev_drv.read_cb = my_touchpad_read;
+void displayPrintln(uint32_t x, uint32_t y, String text, uint16_t color, uint16_t bg, uint32_t size) {
+  int tempPosition = 0;
+  for (int f = 0; f < text.length(); f++)
+  {
+    if (x + (tempPosition * 6 * size) >= 234) {
+      x = -(tempPosition * 6 * size);
+      y += (8 * size);
+    }
+    if (drawChar(x + (tempPosition * 6 * size), y, text[f], color, bg, size)) {
+      tempPosition++;
+    }
+  }
+}
 
-  lv_indev_drv_register(&indev_drv);
+void displayRect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint16_t color) {
+  startWrite();
+  setAddrWindowDisplay(x, y, w, h);
+  displayColor(color);
+  endWrite();
+}
 
-  lv_theme_t *th = lv_theme_night_init(10, NULL);
-  lv_theme_set_current(th);
+void displayImage(uint32_t x, uint32_t y, uint32_t w, uint32_t h, const uint16_t *buffer) {
+  startWrite();
+  setAddrWindowDisplay(x, y, w, h);
+  uint32_t numPixels = (widthheigthWindow * 2);
+  uint32_t curPosition = 0;
+  uint32_t curSize;
+  uint32_t bufferPos;
+  do {
+    memset(lcd_buffer, 0x43, LCD_BUFFER_SIZE);
+    if ((numPixels - curPosition) > LCD_BUFFER_SIZE)
+      curSize = LCD_BUFFER_SIZE;
+    else
+      curSize = (numPixels - curPosition);
+
+    for (int i = 0; i < curSize; i++) {
+      lcd_buffer[i++] = buffer[bufferPos] >> 8;
+      lcd_buffer[i] = buffer[bufferPos];
+      bufferPos++;
+    }
+    write_fast_spi(lcd_buffer, curSize);
+    curPosition += curSize;
+  } while (curPosition < numPixels);
+  endWrite();
 }
 
 void display_enable(bool state) {
   uint8_t temp[2];
-  startWrite_display();
+  startWrite();
   if (state) {
     spiCommand(ST77XX_DISPON);
     spiCommand(ST77XX_SLPOUT);
@@ -91,12 +140,20 @@ void display_enable(bool state) {
     spiCommand(ST77XX_SLPIN);
     spiCommand(ST77XX_DISPOFF);
   }
-  endWrite_display();
+  endWrite();
+}
+
+void display_clear() {
+  startWrite();
+  setAddrWindowDisplay(0, 0, 240, 240);
+  displayColor();
+  endWrite();
 }
 
 void setAddrWindowDisplay(uint32_t x, uint32_t y, uint32_t w, uint32_t h)
 {
   uint8_t temp[4];
+  widthheigthWindow = w * h;
   spiCommand(0x2A);
   temp[0] = 0x00;
   temp[1] = x;
@@ -128,14 +185,20 @@ void initDisplay() {
   delay(100);
   digitalWrite(LCD_RESET, HIGH);
   delay(100);
-  startWrite_display();
+  startWrite();
   spiCommand(54);
+  spiWrite(0);
   temp[0] = 0x00;
   write_fast_spi(temp, 1);
   spiCommand(58);
   temp[0] = 5;
   write_fast_spi(temp, 1);
   spiCommand(178);
+  spiWrite(12);
+  spiWrite(12);
+  spiWrite(0);
+  spiWrite(51);
+  spiWrite(51);
   temp[0] = 12;
   temp[1] = 12;
   temp[2] = 0;
@@ -205,7 +268,9 @@ void initDisplay() {
   spiCommand(41);
   spiCommand(0x11);
   spiCommand(0x29);
-  endWrite_display();
+  setAddrWindowDisplay(0, 0, 240, 240);
+  displayColor();
+  endWrite();
 }
 
 void spiCommand(uint8_t d) {
@@ -214,12 +279,36 @@ void spiCommand(uint8_t d) {
   digitalWrite(LCD_RS , HIGH);
 }
 
-void startWrite_display(void) {
+void spiWrite(uint8_t d) {
+  write_fast_spi(&d, 1);
+}
+
+void startWrite(void) {
   enable_spi(true);
   digitalWrite(LCD_CS , LOW);
 }
 
-void endWrite_display(void) {
+void endWrite(void) {
   digitalWrite(LCD_CS , HIGH);
   enable_spi(false);
+}
+
+void displayColor(uint16_t color) {
+  uint32_t currentPart;
+  uint32_t currentAll = (widthheigthWindow * 2);
+  uint32_t colorSize = LCD_BUFFER_SIZE;
+  if (currentAll < colorSize)colorSize = currentAll;
+  for (int i = 0; i <= colorSize; i++) {
+    lcd_buffer[i++] = color >> 8;
+    lcd_buffer[i] = color;
+  }
+  do
+  {
+    if (currentAll >= LCD_BUFFER_SIZE)currentPart = LCD_BUFFER_SIZE;
+    else
+      currentPart = currentAll;
+    write_fast_spi(lcd_buffer, currentPart);
+    currentAll -= currentPart;
+  }
+  while ( currentAll > 0);
 }
