@@ -130,18 +130,12 @@ void initDisplay() {
   delay(100);
   startWrite_display();
   spiCommand(54);
-  spiWrite(0);
   temp[0] = 0x00;
   write_fast_spi(temp, 1);
   spiCommand(58);
   temp[0] = 5;
   write_fast_spi(temp, 1);
   spiCommand(178);
-  spiWrite(12);
-  spiWrite(12);
-  spiWrite(0);
-  spiWrite(51);
-  spiWrite(51);
   temp[0] = 12;
   temp[1] = 12;
   temp[2] = 0;
@@ -218,10 +212,6 @@ void spiCommand(uint8_t d) {
   digitalWrite(LCD_RS , LOW);
   write_fast_spi(&d, 1);
   digitalWrite(LCD_RS , HIGH);
-}
-
-void spiWrite(uint8_t d) {
-  write_fast_spi(&d, 1);
 }
 
 void startWrite_display(void) {

@@ -47,6 +47,5 @@ void inc_tick();
 void setAddrWindowDisplay(uint32_t x, uint32_t y, uint32_t w, uint32_t h);
 void initDisplay();
 void spiCommand(uint8_t d);
-void spiWrite(uint8_t d);
 void startWrite_display(void);
 void endWrite_display(void);
