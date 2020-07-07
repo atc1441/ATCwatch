@@ -2,7 +2,6 @@
 
 #include "fast_spi.h"
 #include "images.h"
-#include "font57.h"
 #include "battery.h"
 #include "touch.h"
 #include "accl.h"
