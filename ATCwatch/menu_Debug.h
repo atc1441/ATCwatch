@@ -75,7 +75,7 @@ class DebugScreen : public Screen
     
   private:
     lv_obj_t *label, *label_millis, *label_uptime, *label_reset, *label_wakeup, *label_debug;
-    char * wakeup_reason[10] = {"Unset", "Push", "Connect", "Disconnect", "Charged", "Charge", "Button", "Touch", "Accl", "AcclINT"};
+    char * wakeup_reason[11] = {"Unset", "Push", "Connect", "Disconnect", "Charged", "Charge", "Button", "Touch", "Accl", "AcclINT","HTTP"};
 
 };
 

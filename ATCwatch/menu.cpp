@@ -28,6 +28,8 @@
 #include "menu_Charging.h"
 #include "menu_Flash.h"
 #include "menu_Touch.h"
+#include "menu_Http.h"
+#include "menu_Log.h"
 #include "menu_Settings.h"
 #include <lvgl.h>
 
@@ -57,12 +59,14 @@ app_struct demoApp = {"Demo", &IsymbolChart , &demoScreen};
 
 app_struct flashApp = {"Flash_test", &IsymbolChart , &flashScreen};
 app_struct touchApp = {"Touch", &IsymbolMouse , &touchScreen};
+app_struct httpApp = {"HTTP", &IsymbolMouse , &httpScreen};
+app_struct logApp = {"Logging", &IsymbolAnimation , &logScreen};
 
 int maxApps = 4;
 AppScreen apps1Screen(1, maxApps, &notifyApp, &heartApp, &debugApp, &animationApp);
 AppScreen apps2Screen(2, maxApps, &rebootApp, &updateApp, &offApp, &settingsApp);
 AppScreen apps3Screen(3, maxApps, &infosApp, &acclApp, &demoApp, &batteryApp);
-AppScreen apps4Screen(4, maxApps, &flashApp, &touchApp, &flashApp, &flashApp);
+AppScreen apps4Screen(4, maxApps, &flashApp, &touchApp, &httpApp, &logApp);
 
 Screen *menus[5] = {&homeScreen, &apps1Screen, &apps2Screen, &apps3Screen, &apps4Screen};
 

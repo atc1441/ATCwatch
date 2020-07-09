@@ -6,6 +6,7 @@
 #include "inputoutput.h"
 
 String msgText = " ";
+String httpText = " ";
 
 void init_push() {
 
@@ -43,6 +44,27 @@ void show_push(String pushMSG) {
   set_motor_ms();
   set_led_ms(100);
   set_sleep_time();
+}
+
+void show_http(String httpMSG) {
+  httpText = filter_string("http: " + httpMSG);
+  set_motor_ms();
+  set_sleep_time();
+}
+
+String get_http_msg(int returnLength) {
+  if (returnLength != 0 || httpText.length() == returnLength) {
+    if (httpText.length() < returnLength) {
+      String tempText = httpText;
+      int toSmall = returnLength - httpText.length();
+      for (int i = 0; i < toSmall; i++) {
+        tempText += " ";
+      }
+      return tempText;
+    } else if (httpText.length() > returnLength)
+      return httpText.substring(0, returnLength - 3) + "...";
+  }
+  return httpText;
 }
 
 String get_push_msg(int returnLength) {

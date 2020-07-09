@@ -134,5 +134,7 @@ void filterCmd(String Command) {
     ble_write("AT+DT:" + GetDateTimeString());
   } else if (Command.substring(0, 5) == "AT+DT") {
     ble_write("AT+DT:" + GetDateTimeString());
+  } else if (Command.substring(0, 8) == "AT+HTTP=") {
+    show_http(Command.substring(8));
   }
 }

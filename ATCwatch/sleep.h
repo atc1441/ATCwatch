@@ -12,6 +12,7 @@
 #define WAKEUP_TOUCH 7
 #define WAKEUP_ACCL 8
 #define WAKEUP_ACCL_INT 9
+#define WAKEUP_BLEHTTP 10
 
 void init_sleep();
 void set_sleep(bool state);
