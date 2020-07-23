@@ -73,7 +73,7 @@ void check_battery_status() {
     if (get_battery_percent() < 15) {
       if (!batteryWasNotified) {
         batteryWasNotified = true;
-        show_push("Battery Emtpy");
+        show_push("Battery Empty");
       }
     } else if (get_battery_percent() < 5) {
       system_off();
