@@ -26,7 +26,7 @@ This firmware is meant to be used with the D6Notification App from the PlayStore
 https://play.google.com/store/apps/details?id=com.atcnetz.de.notification&hl=gsw
 
 ## License:
-If you want to use the code or parts of it commercial please write an email to: info@atcnetz.de
+If you want to use the code or parts of it commercially please write an email to: info@atcnetz.de
 
 ## Credits:
 Many Thanks to Daniel Thompson(https://github.com/daniel-thompson/wasp-os) to giving the Hint with the BMA423 Library
