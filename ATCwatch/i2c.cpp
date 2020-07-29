@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2020 Aaron Christophel
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 #include <Arduino.h>
 #include "pinout.h"
 #include "i2c.h"
