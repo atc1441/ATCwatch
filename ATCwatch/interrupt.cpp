@@ -190,6 +190,11 @@ void interrupt_charge() {
 void interrupt_button() {
   if (get_button() && (millis() - last_button_press > 200)) {
     last_button_press = millis();
+    if(!get_sleep()){
+      sleep_down();
+      set_motor_ms(10);
+      return;
+    }
     if (!sleep_up(WAKEUP_BUTTON)) {
       display_home();
     }
