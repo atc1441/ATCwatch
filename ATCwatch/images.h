@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2020 Remix Icon contributors
+ * 
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #pragma once
 
 #include "Arduino.h"

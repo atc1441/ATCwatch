@@ -29,11 +29,24 @@ https://play.google.com/store/apps/details?id=com.atcnetz.de.notification&hl=gsw
 Many Thanks to Daniel Thompson(https://github.com/daniel-thompson/wasp-os) to giving the Hint with the BMA423 Library
 This way interrupts are finally possible with it.
 
-This code uses the BMA423 Library wich is made by Bosch and this is under copyright by Bosch Sensortech GmbH
+## Copyright and licenses
+
+This program is created by Aaron Christophel and made available the GNU General Public License version 3 or, at your option, any later version.
+
+It makes use of the BMA423 Library which is copyrighted by Bosch Sensortech GmbH and under the BSD-3-Clause license.
 https://github.com/BoschSensortec/BMA423-Sensor-API
+
+The icons used are under the Apache License 2.0 and taken from here:
+https://github.com/Remix-Design/RemixIcon
+https://github.com/romannurik/AndroidAssetStudio (the boot logo)
+
+The Montserrat font is under the SIL Open Font License, Version 1.1 and taken from here:
+https://fonts.google.com/specimen/Montserrat
 
 ## FAQ / Errors
 #### Code does not compile / Arduino puts out errors.
 ---> This code is meant to be used with the D6Arduino.rar on Windows and is tested that way, sometimes i make changes to the D6Arduino.rar so you need to update that also when getting the newest firmware, i will try to add information when you need to update it but can not guaranty this info, so just try an update if it does not work.
 
 The latest update that needs the newest D6Arduino.rar file is this: https://github.com/atc1441/ATCwatch/commit/0dd3138d10d5c8f1a776ad1b7f1d4819d686e46f
+
+SPDX-License-Identifier: GPL-3.0-or-later
