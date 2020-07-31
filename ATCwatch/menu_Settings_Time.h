@@ -163,6 +163,22 @@ class SettingsTimeScreen : public Screen
       }
     }
 
+    virtual void up()
+    {
+    }
+
+    virtual void down()
+    {
+    }
+
+    virtual void right()
+    {
+    }
+
+    virtual void left()
+    {
+    }
+
   private:
     lv_obj_t *label_screen;
     lv_obj_t *btn1, *btn2, *btn1_label, *btn2_label, *label_points;

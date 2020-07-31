@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2020 Aaron Christophel
- *
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+   Copyright (c) 2020 Aaron Christophel
+
+   SPDX-License-Identifier: GPL-3.0-or-later
+*/
 
 #include "touch.h"
 #include "Arduino.h"
@@ -77,6 +77,13 @@ void get_read_touch() {
   touch_data.event = data_raw[2] >> 6;
   touch_data.xpos = data_raw[3];
   touch_data.ypos = data_raw[5];
+  if (touch_data.xpos == 255 && touch_data.ypos == 255) {
+    touch_data.xpos = touch_data.last_xpos;
+    touch_data.ypos = touch_data.last_ypos;
+  } else {
+    touch_data.last_xpos = touch_data.xpos;
+    touch_data.last_ypos = touch_data.ypos;
+  }
 }
 
 touch_data_struct get_touch() {

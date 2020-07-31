@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2020 Aaron Christophel
- *
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+   Copyright (c) 2020 Aaron Christophel
+
+   SPDX-License-Identifier: GPL-3.0-or-later
+*/
 
 #include "interrupt.h"
 #include "pinout.h"
@@ -187,14 +187,24 @@ void interrupt_charge() {
   }
 }
 
+bool button_pressed = false;
+long button_press_begin = 0;
 void interrupt_button() {
   if (get_button() && (millis() - last_button_press > 200)) {
     last_button_press = millis();
     if (!sleep_up(WAKEUP_BUTTON)) {
+      button_pressed = true;
+      button_press_begin = millis();
+    } else {
       display_home();
+      set_motor_ms(40);
+      set_sleep_time();
     }
-    set_motor_ms(40);
-    set_sleep_time();
+  } else {//button not pressed anymore
+    if (button_pressed) {
+      button_pressed = false;
+      check_button_push(millis() - button_press_begin);
+    }
   }
 }
 

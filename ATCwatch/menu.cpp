@@ -5,7 +5,7 @@
  */
 
 #include "menu.h"
-#include "class.h"
+#include "class_def.h"
 #include "images.h"
 #include "pinout.h"
 #include "touch.h"
@@ -43,9 +43,9 @@ int vars_menu = -1;
 int vars_max_menu = 4;
 bool swipe_enabled_bool = false;
 
-Screen *currentScreen = &homeScreen;
-Screen *oldScreen = &homeScreen;
-Screen *lastScreen = &homeScreen;
+Screen_def *currentScreen = &homeScreen;
+Screen_def *oldScreen = &homeScreen;
+Screen_def *lastScreen = &homeScreen;
 
 app_struct notifyApp = {"Notify", &IsymbolMsg, &notifyScreen};
 app_struct heartApp = {"Heartrate", &IsymbolHeart, &heartScreen};
@@ -73,7 +73,7 @@ AppScreen apps2Screen(2, maxApps, &rebootApp, &updateApp, &offApp, &settingsApp)
 AppScreen apps3Screen(3, maxApps, &infosApp, &acclApp, &demoApp, &batteryApp);
 AppScreen apps4Screen(4, maxApps, &flashApp, &touchApp, &httpApp, &logApp);
 
-Screen *menus[5] = {&homeScreen, &apps1Screen, &apps2Screen, &apps3Screen, &apps4Screen};
+Screen_def *menus[5] = {&homeScreen, &apps1Screen, &apps2Screen, &apps3Screen, &apps4Screen};
 
 void init_menu() {
 
@@ -127,6 +127,10 @@ void display_screen(bool ignoreWait) {
   lv_task_handler();
 }
 
+void check_button_push(int length) {
+  currentScreen->button_push(length);
+}
+
 void check_menu(touch_data_struct touch_data) {
   if (touch_data.gesture == TOUCH_SLIDE_UP) {
     currentScreen->up();
@@ -147,7 +151,7 @@ uint32_t get_menu_delay_time() {
   return currentScreen->refreshTime();
 }
 
-void change_screen(Screen* screen) {
+void change_screen(Screen_def* screen) {
   lastScreen = currentScreen;
   currentScreen = screen;
 }

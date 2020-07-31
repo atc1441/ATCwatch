@@ -72,6 +72,22 @@ class SettingsBrightnessScreen : public Screen
       }
     }
 
+    virtual void up()
+    {
+    }
+
+    virtual void down()
+    {
+    }
+
+    virtual void right()
+    {
+    }
+
+    virtual void left()
+    {
+    }
+
   private:
     int backlight_brightness;
     lv_obj_t *label_screen;

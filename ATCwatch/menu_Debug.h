@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2020 Aaron Christophel
- *
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+   Copyright (c) 2020 Aaron Christophel
+
+   SPDX-License-Identifier: GPL-3.0-or-later
+*/
 
 #pragma once
 #include "Arduino.h"
@@ -45,8 +45,12 @@ class DebugScreen : public Screen
       lv_obj_align(label_wakeup, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 85);
 
       label_debug = lv_label_create(lv_scr_act(), NULL);
-      lv_label_set_text_fmt(label_debug, "Debugmode: %s", (DWT->CYCCNT ? "Disabled":"Enabled"));
+      lv_label_set_text_fmt(label_debug, "Debugmode: %s", (DWT->CYCCNT ? "Disabled" : "Enabled"));
       lv_obj_align(label_debug, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 105);
+
+      label_button = lv_label_create(lv_scr_act(), NULL);
+      lv_label_set_text_fmt(label_button, "Button pressed: 0ms");
+      lv_obj_align(label_button, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 125);
 
       lv_obj_t * img1 = lv_img_create(lv_scr_act(), NULL);
       lv_img_set_src(img1, &IsymbolDebug);
@@ -78,10 +82,15 @@ class DebugScreen : public Screen
     {
       set_last_menu();
     }
-    
+
+    virtual void button_push(int length)
+    {
+      lv_label_set_text_fmt(label_button, "Button pressed: %ims", length);
+    }
+
   private:
-    lv_obj_t *label, *label_millis, *label_uptime, *label_reset, *label_wakeup, *label_debug;
-    char * wakeup_reason[11] = {"Unset", "Push", "Connect", "Disconnect", "Charged", "Charge", "Button", "Touch", "Accl", "AcclINT","HTTP"};
+    lv_obj_t *label, *label_millis, *label_uptime, *label_reset, *label_wakeup, *label_debug, *label_button;
+    char * wakeup_reason[11] = {"Unset", "Push", "Connect", "Disconnect", "Charged", "Charge", "Button", "Touch", "Accl", "AcclINT", "HTTP"};
 
 };
 

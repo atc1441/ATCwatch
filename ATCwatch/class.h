@@ -1,18 +1,17 @@
 /*
- * Copyright (c) 2020 Aaron Christophel
- *
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+   Copyright (c) 2020 Aaron Christophel
+
+   SPDX-License-Identifier: GPL-3.0-or-later
+*/
 
 #pragma once
 #include "Arduino.h"
+#include "class_def.h"
+#include "inputoutput.h"
+#include "sleep.h"
 #include "menu.h"
-#include <lvgl.h>
 
-#define DEFAULT_SLEEP_TIMEOUT 10000
-#define DEFAULT_REFRESH_TIME 40
-
-class Screen
+class Screen : public Screen_def
 {
   public:
     virtual void pre()
@@ -41,6 +40,7 @@ class Screen
 
     virtual void right()
     {
+      set_last_menu();
     }
 
     virtual void click(touch_data_struct touch_data)
@@ -50,23 +50,11 @@ class Screen
     virtual void long_click(touch_data_struct touch_data)
     {
     }
-    virtual uint32_t sleepTime()
-    {
-      return DEFAULT_SLEEP_TIMEOUT;
-    }
-    
-    virtual uint32_t refreshTime()
-    {
-      return DEFAULT_REFRESH_TIME;
-    }
-    
-    virtual void lv_event_class(lv_obj_t * object, lv_event_t event)
-    {
-      
-    }
 
-    virtual void pre_display()
+    virtual void button_push(int length)
     {
-      lv_obj_clean(lv_scr_act());
-    }    
+      display_home();
+      set_motor_ms(40);
+      set_sleep_time();
+    }
 };
