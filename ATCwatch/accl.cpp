@@ -1,133 +1,87 @@
 /*
- * Copyright (c) 2020 Aaron Christophel
- *
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+   Copyright (c) 2020 Aaron Christophel
+
+   SPDX-License-Identifier: GPL-3.0-or-later
+*/
 
 #include "accl.h"
+#include "accl_config.h"
 #include "Arduino.h"
 #include "i2c.h"
 #include "pinout.h"
-#include "bma423.h"
-//https://github.com/BoschSensortec/BMA423-Sensor-API
-//Many Thanks to Daniel Thompson(https://github.com/daniel-thompson/wasp-os) to giving the Hint to use a modified BMA423 Library
 #include "watchdog.h"
 #include "inputoutput.h"
 #include "ble.h"
 #include "sleep.h"
 
 struct accl_data_struct accl_data;
-bool accl_is_enabled;
-static uint8_t dev_addr = BMA4_I2C_ADDR_PRIMARY;
-struct bma4_dev bma;
-struct bma4_accel_config accel_conf;
-
 
 void init_accl() {
   pinMode(BMA421_INT, INPUT);
-
-  uint16_t rslt = 0;
-  uint8_t init_seq_status = 0;
-
-  watchdog_feed();
-
-  bma.intf = BMA4_I2C_INTF;
-  bma.bus_read = user_i2c_read;
-  bma.bus_write = user_i2c_write;
-  bma.variant = BMA42X_VARIANT;
-  bma.intf_ptr = &dev_addr;
-  bma.delay_us = user_delay;
-  bma.read_write_len = 8;
-
-  accel_conf.odr = BMA4_OUTPUT_DATA_RATE_100HZ;
-  accel_conf.range = BMA4_ACCEL_RANGE_2G;
-  accel_conf.bandwidth = BMA4_ACCEL_NORMAL_AVG4;
-  accel_conf.perf_mode = BMA4_CIC_AVG_MODE;
-
-  unsigned int init_counter = 0;
-  do
-  {
-    watchdog_feed();
-    rslt = rslt | do_accl_init();
-    if (rslt == 0) {
-      accl_is_enabled = true;
-      accl_data.result = rslt;
-      accl_data.enabled = true;
-      return;
-    }
-  } while (init_counter++ < 5);
-
-  accl_is_enabled = false;
-  accl_data.result = rslt;
-  accl_data.enabled = false;
+  reset_accl();
+  delay(10);
+  accl_write_reg(0x7C, 0x00);//Sleep disable
+  delay(1);
+  accl_write_reg(0x59, 0x00);//Write Blob
+  accl_config_read_write(0, 0x5E, (uint8_t *)accl_config_file, sizeof(accl_config_file), 0);
+  accl_write_reg(0x59, 0x01);
+  delay(10);
+  accl_write_reg(0x7D, 0x04);//Accl Enable
+  accl_write_reg(0x40, 0b00101000);//Acc Conf
+  reset_step_counter();//Enable and Reset
+  accl_write_reg(0x7C, 0x03);//Sleep Enable
 }
 
-uint16_t do_accl_init() {
-  uint16_t init_rslt = 0;
-  reset_accl();
-  delay(100);
-  init_rslt = init_rslt | bma423_init(&bma);
-  delay(20);
-  init_rslt = init_rslt | bma423_write_config_file(&bma);
-  delay(20);
-  init_rslt = init_rslt | bma4_set_accel_enable(1, &bma);
-  delay(20);
-  init_rslt = init_rslt | bma4_set_accel_config(&accel_conf, &bma);
-  delay(20);
-  init_rslt = init_rslt | bma423_feature_enable(BMA423_STEP_CNTR | BMA423_STEP_ACT, 1, &bma);//Step Counter and Acticity Feature (Standing, Walking, Running)
-  delay(20);
-  //init_rslt = init_rslt | bma423_map_interrupt(BMA4_INTR1_MAP,  BMA423_ACTIVITY_INT | BMA423_STEP_CNTR_INT, 1,&bma);
-  delay(20);
-  //init_rslt = init_rslt | bma423_step_counter_set_watermark(1, &bma);// 1*20 Steps
-  delay(20);
-
-  struct bma4_int_pin_config int_pin_config;
-  int_pin_config.edge_ctrl = BMA4_LEVEL_TRIGGER;
-  int_pin_config.lvl = BMA4_ACTIVE_LOW;
-  int_pin_config.od = BMA4_PUSH_PULL;
-  int_pin_config.output_en = BMA4_OUTPUT_ENABLE;
-  int_pin_config.input_en = BMA4_INPUT_DISABLE;
-  bma4_set_int_pin_config(&int_pin_config, BMA4_INTR1_MAP, &bma);
-
-  return init_rslt;
+void accl_config_read_write(bool rw, uint8_t addr, uint8_t *data, uint32_t len, uint32_t offset)
+{
+  for (int i = 0; i < len; i += 16) {
+    accl_write_reg(0x5B, (offset + (i / 2)) & 0x0F);
+    accl_write_reg(0x5C, (offset + (i / 2)) >> 4);
+    if (rw)
+      user_i2c_read(0x18, 0x5E, data + i, (len - i >= 16) ? 16 : (len - i));
+    else
+      user_i2c_write(0x18, 0x5E, data + i, (len - i >= 16) ? 16 : (len - i));
+  }
 }
 
 void reset_accl() {
-  byte standby_value[1] = {0xB6};
-  user_i2c_write(dev_addr, 0x7E, standby_value, 1);
+  accl_write_reg(0x7E, 0xB6);
 }
 
 void reset_step_counter() {
-  bma423_reset_step_counter(&bma);
+  uint8_t feature_config[0x47] = { 0 };
+  accl_write_reg(0x7C, 0x00);//Sleep disable
+  delay(1);
+  accl_config_read_write(1, 0x5E, feature_config, 0x46, 256);
+  feature_config[0x3A + 1] = 0x34;
+  accl_config_read_write(0, 0x5E, feature_config, 0x46, 256);
+  accl_write_reg(0x7C, 0x03);//Sleep Enable
+}
+
+uint32_t read_step_data() {
+  uint32_t data;
+  user_i2c_read(0x18, 0x1E, (uint8_t *)&data, 4);
+  return data;
 }
 
 int last_y_acc = 0;
 bool acc_input() {
-  if (!accl_is_enabled)return false;
-  struct bma4_accel data;
-  bma4_read_accel_xyz(&data, &bma);
-
-#ifdef SWITCH_X_Y // pinetime has 90° rotated Accl
-  short tempX = data.x;
-  data.x = data.y;
-  data.y = tempX;
-#endif
-
-  if ((data.x + 335) <= 670 && data.z < 0) {
+  update_accl_data();
+  if ((accl_data.x + 335) <= 670 && accl_data.z < 0) {
     if (!get_sleep()) {
-      if (data.y <= 0) {
+      if (accl_data.y <= 0) {
         return false;
       } else {
         last_y_acc = 0;
         return false;
       }
     }
-    if (data.y >= 0) {
+    if (accl_data.y >= 0) {
       last_y_acc = 0;
       return false;
     }
-    if (data.y + 230 < last_y_acc) {
-      last_y_acc = data.y;
+    if (accl_data.y + 230 < last_y_acc) {
+      last_y_acc = accl_data.y;
       return true;
     }
   }
@@ -135,66 +89,38 @@ bool acc_input() {
 }
 
 bool get_is_looked_at() {
-  if (!accl_is_enabled)return false;
-  struct bma4_accel data;
-  bma4_read_accel_xyz(&data, &bma);
-
-#ifdef SWITCH_X_Y // pinetime has 90° rotated Accl
-  short tempX = data.x;
-  data.x = data.y;
-  data.y = tempX;
-#endif
-
-  if ((data.y + 300) <= 600 && (data.x + 300) <= 600 && data.z < 100)
+  update_accl_data();
+  if ((accl_data.y + 300) <= 600 && (accl_data.x + 300) <= 600 && accl_data.z < 100)
     return true;
   return false;
 }
 
 accl_data_struct get_accl_data() {
-  int16_t rslt;
-  struct bma4_accel data;
-  if (!accl_is_enabled)return accl_data;
-  rslt = bma4_read_accel_xyz(&data, &bma);
-
-#ifdef SWITCH_X_Y // pinetime has 90° rotated Accl
-  short tempX = data.x;
-  data.x = data.y;
-  data.y = tempX;
-#endif
-
-  accl_data.x = data.x;
-  accl_data.y = data.y;
-  accl_data.z = data.z;
-
-  bma423_step_counter_output(&accl_data.steps, &bma);
-
-  int32_t get_temp_C;
-  rslt = bma4_get_temperature(&get_temp_C, BMA4_DEG, &bma);
-
-  accl_data.temp = get_temp_C / 1000;
-
-  bma423_read_int_status(&accl_data.interrupt, &bma);
-  bma423_activity_output(&accl_data.activity, &bma);
+  update_accl_data();
+  accl_data.steps = read_step_data();
+  accl_data.activity = accl_read_reg(0x27);
+  accl_data.temp = accl_read_reg(0x22) + 23;
   return accl_data;
 }
 
-void get_accl_int() {
-  if (!accl_is_enabled)return;
-
+void update_accl_data() {
+  user_i2c_read(0x18, 0x12, (uint8_t *)&accl_data.x, 6);
+#ifdef SWITCH_X_Y // pinetime has 90° rotated Accl
+  short tempX = accl_data.x;
+  accl_data.x = accl_data.y;
+  accl_data.y = tempX;
+#endif
+  accl_data.x = (accl_data.x / 0x10);
+  accl_data.y = (accl_data.y / 0x10);
+  accl_data.z = (accl_data.z / 0x10);
 }
 
-int8_t user_i2c_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t length, void *intf_ptr)
-{
-  return user_i2c_read(dev_addr, reg_addr, reg_data, length);
+void accl_write_reg(uint8_t reg, uint8_t data) {
+  user_i2c_write(0x18, reg, &data, 1);
 }
 
-int8_t user_i2c_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t length, void *intf_ptr)
-{
-  return user_i2c_write(dev_addr, reg_addr, reg_data, length);
-}
-
-
-void user_delay(uint32_t period_us, void *intf_ptr)
-{
-  delayMicroseconds(period_us);
+uint8_t accl_read_reg(uint8_t reg) {
+  uint8_t data;
+  user_i2c_read(0x18, reg, &data, 1);
+  return data;
 }
