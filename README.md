@@ -29,7 +29,7 @@ This firmware is meant to be used with the D6Notification App from the PlayStore
 - https://play.google.com/store/apps/details?id=com.atcnetz.de.notification&hl=gsw
 
 ## Credits
-Many Thanks to Daniel Thompson (https://github.com/daniel-thompson/wasp-os) for giving the Hint with the BMA423 Library. This way interrupts are finally possible with it.
+Many Thanks to Daniel Thompson (https://github.com/daniel-thompson/wasp-os) for giving the Hint with the BMA423 Library.
 
 Also many Thanks to https://github.com/endian-albin for helping so much with the Licensing.
 
@@ -37,7 +37,7 @@ Also many Thanks to https://github.com/endian-albin for helping so much with the
 
 This program is created by Aaron Christophel and made available under the GNU General Public License version 3 or, at your option, any later version.
 
-It makes use of the BMA423 Library which is copyrighted by Bosch Sensortech GmbH and under the BSD-3-Clause license:
+It makes use of the BMA423 Config blob which is copyrighted by Bosch Sensortech GmbH and under the BSD-3-Clause license:
 - https://github.com/BoschSensortec/BMA423-Sensor-API
 
 The icons are under the Apache License 2.0 and taken from here:
