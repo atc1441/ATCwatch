@@ -37,8 +37,10 @@ Also many Thanks to https://github.com/endian-albin for helping so much with the
 
 This program is created by Aaron Christophel and made available under the GNU General Public License version 3 or, at your option, any later version.
 
-It makes use of the BMA423 Config blob which is copyrighted by Bosch Sensortech GmbH and under the BSD-3-Clause license:
+It makes use of a config blob from the BMA423 library which is copyrighted by Bosch Sensortech GmbH and under the BSD-3-Clause license:
 - https://github.com/BoschSensortec/BMA423-Sensor-API
+
+Under GNU GPL version 3 section 7, you are granted the additional permission to link to this blob and convey the resulting work.
 
 The icons are under the Apache License 2.0 and taken from here:
 - https://github.com/Remix-Design/RemixIcon
@@ -53,4 +55,4 @@ The Montserrat font is under the SIL Open Font License, Version 1.1 and taken fr
 
 The latest update that needs the newest D6Arduino.rar file is this: https://github.com/atc1441/ATCwatch/commit/0dd3138d10d5c8f1a776ad1b7f1d4819d686e46f
 
-SPDX-License-Identifier: GPL-3.0-or-later
+SPDX-License-Identifier: GPL-3.0-or-later WITH GPL-3.0-linking-exception
