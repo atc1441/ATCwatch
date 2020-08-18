@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2020 Aaron Christophel
- *
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+   Copyright (c) 2020 Aaron Christophel
+
+   SPDX-License-Identifier: GPL-3.0-or-later
+*/
 
 #include "menu.h"
 #include "class_def.h"
@@ -128,6 +128,7 @@ void display_screen(bool ignoreWait) {
 }
 
 void check_button_push(int length) {
+  set_sleep_time();
   currentScreen->button_push(length);
 }
 

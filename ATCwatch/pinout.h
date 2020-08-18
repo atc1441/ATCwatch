@@ -55,7 +55,7 @@
 #define VIBRATOR_OUT      16
 //#define PUSH_BUTTON_IN    13 // Pinetime
 //#define PUSH_BUTTON_OUT   15 //PinetTime
-#define PUSH_BUTTON_IN    17   // P8 Watch
+#define PUSH_BUTTON_IN      17   // P8 Watch15//P22
 #define PUSH_BUTTON_OUT   -1   // P8 Watch
 
 //Backlight

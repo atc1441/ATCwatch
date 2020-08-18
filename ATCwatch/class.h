@@ -55,6 +55,5 @@ class Screen : public Screen_def
     {
       display_home();
       set_motor_ms(40);
-      set_sleep_time();
     }
 };
