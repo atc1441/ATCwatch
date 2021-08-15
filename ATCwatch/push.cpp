@@ -12,6 +12,10 @@
 
 String msgText = " ";
 String httpText = " ";
+String nameText = " ";
+String msgBodyText = " ";
+String titlText = " ";
+String tickText = " ";
 
 void init_push() {
 
@@ -57,6 +61,26 @@ void show_http(String httpMSG) {
   set_sleep_time();
 }
 
+void show_appName(String nameMSG) {
+  nameText = filter_string("App: " + nameMSG);
+  set_sleep_time();
+}
+
+void show_tick(String tickMSG) {
+  tickText = filter_string("Text: " + tickMSG);
+  set_sleep_time();
+}
+
+void show_msgBody(String bodyMSG) {
+  msgBodyText = filter_string("Body: " + bodyMSG);
+  set_sleep_time();
+}
+
+void show_titl(String titlMSG) {
+  titlText = filter_string("Title: " + titlMSG);
+  set_sleep_time();
+}
+
 String get_http_msg(int returnLength) {
   if (returnLength != 0 || httpText.length() == returnLength) {
     if (httpText.length() < returnLength) {
@@ -85,4 +109,64 @@ String get_push_msg(int returnLength) {
       return msgText.substring(0, returnLength - 3) + "...";
   }
   return msgText;
+}
+
+String get_name_msg(int returnLength) {
+  if (returnLength != 0 || nameText.length() == returnLength) {
+    if (nameText.length() < returnLength) {
+      String tempText = nameText;
+      int toSmall = returnLength - nameText.length();
+      for (int i = 0; i < toSmall; i++) {
+        tempText += " ";
+      }
+      return tempText;
+    } else if (nameText.length() > returnLength)
+      return nameText.substring(0, returnLength - 3) + "...";
+  }
+  return nameText;
+}
+
+String get_body_msg(int returnLength) {
+  if (returnLength != 0 || msgBodyText.length() == returnLength) {
+    if (msgBodyText.length() < returnLength) {
+      String tempText = msgBodyText;
+      int toSmall = returnLength - msgBodyText.length();
+      for (int i = 0; i < toSmall; i++) {
+        tempText += " ";
+      }
+      return tempText;
+    } else if (msgBodyText.length() > returnLength)
+      return msgBodyText.substring(0, returnLength - 3) + "...";
+  }
+  return msgBodyText;
+}
+
+String get_titl_msg(int returnLength) {
+  if (returnLength != 0 || titlText.length() == returnLength) {
+    if (titlText.length() < returnLength) {
+      String tempText = titlText;
+      int toSmall = returnLength - titlText.length();
+      for (int i = 0; i < toSmall; i++) {
+        tempText += " ";
+      }
+      return tempText;
+    } else if (titlText.length() > returnLength)
+      return titlText.substring(0, returnLength - 3) + "...";
+  }
+  return titlText;
+}
+
+String get_tick_msg(int returnLength) {
+  if (returnLength != 0 || tickText.length() == returnLength) {
+    if (tickText.length() < returnLength) {
+      String tempText = tickText;
+      int toSmall = returnLength - tickText.length();
+      for (int i = 0; i < toSmall; i++) {
+        tempText += " ";
+      }
+      return tempText;
+    } else if (tickText.length() > returnLength)
+      return tickText.substring(0, returnLength - 3) + "...";
+  }
+  return tickText;
 }

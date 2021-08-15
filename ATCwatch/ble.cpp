@@ -142,5 +142,13 @@ void filterCmd(String Command) {
     ble_write("AT+DT:" + GetDateTimeString());
   } else if (Command.substring(0, 8) == "AT+HTTP=") {
     show_http(Command.substring(8));
+  } else if (Command.substring(0, 8) == "AT+NAME=") {
+    show_appName(Command.substring(8));
+  } else if (Command.substring(0, 8) == "AT+TITL=") {
+    show_titl(Command.substring(8));
+  } else if (Command.substring(0, 8) == "AT+BODY=") {
+    show_msgBody(Command.substring(8));
+  } else if (Command.substring(0, 8) == "AT+TICK=") {
+    show_msgBody(Command.substring(8));
   }
 }
