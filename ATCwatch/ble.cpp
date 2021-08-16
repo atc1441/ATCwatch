@@ -25,6 +25,7 @@ bool vars_ble_connected = false;
 
 void init_ble() {
   blePeripheral.setLocalName("ATCwatch");
+  blePeripheral.setConnectionInterval(400,401);
   blePeripheral.setAdvertisingInterval(500);
   blePeripheral.setDeviceName("ATCwatch");
   blePeripheral.setAdvertisedServiceUuid(main_service.uuid());
