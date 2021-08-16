@@ -7,7 +7,7 @@
 #ifndef _PINOUT_
 #define _PINOUT_
 
-//#define P8WATCH//Enable or Disable this line to set for Pinetime or P8 Watch, more pinouts to added here
+#define P8WATCH//Enable or Disable this line to set for Pinetime or P8 Watch, more pinouts to added here
 
 #ifdef P8WATCH
 
